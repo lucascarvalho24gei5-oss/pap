@@ -1,33 +1,231 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt">
 <head>
-  <title>PC Builder 💻</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC Builder 💻</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #00ffcc;
+        }
+
+        input {
+            padding: 10px;
+            width: 200px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #00ffcc;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        button:hover {
+            background: #00ccaa;
+        }
+
+        .build {
+            background: #222;
+            margin: 20px auto;
+            padding: 20px;
+            width: 300px;
+            border-radius: 10px;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
 
-<h1>PC Builder</h1>
+    <h1>PC Builder 💻</h1>
+    <p>Insere o teu orçamento (€):</p>
 
-<input type="number" id="budget" placeholder="Orçamento €">
-<button onclick="buildPC()">Gerar</button>
+    <input type="number" id="budget" placeholder="Ex: 1000">
+    <button onclick="buildPC()">Gerar Build</button>
 
-<p id="result"></p>
+    <div id="result"></div>
 
-<script>
-function buildPC() {
-  let budget = document.getElementById("budget").value;
-  let result = "";
+    <script>
+        function buildPC() {
+            let budget = parseInt(document.getElementById("budget").value);
+            let result = "";
 
-  if (budget < 500) {
-    result = "Orçamento muito baixo";
-  } else if (budget < 800) {
-    result = "Build básica<br>Ryzen 5 + GTX 1660";
-  } else {
-    result = "Build boa<br>Ryzen 5 5600 + RX 6600";
-  }
+            if (budget < 400) {
+                result = "❌ Orçamento demasiado baixo.";
+            }
 
-  document.getElementById("result").innerHTML = result;
-}
-</script>
+            else if (budget < 500) {
+                result = `
+                <div class="build">
+                    <h2>400€ - 499€</h2>
+                    CPU: Ryzen 3 4100<br>
+                    GPU: GTX 1050 Ti<br>
+                    RAM: 16GB DDR4<br>
+                    SSD: 480GB SATA<br>
+                    Motherboard: A320M<br>
+                    Fonte: 500W Bronze<br>
+                    Caixa: Nox Lite
+                </div>`;
+            }
+
+            else if (budget < 600) {
+                result = `
+                <div class="build">
+                    <h2>500€ - 599€</h2>
+                    CPU: Ryzen 5 4500<br>
+                    GPU: GTX 1650<br>
+                    RAM: 16GB DDR4<br>
+                    SSD: 500GB NVMe<br>
+                    Motherboard: A520M<br>
+                    Fonte: 550W Bronze<br>
+                    Caixa: Aerocool Bolt
+                </div>`;
+            }
+
+            else if (budget < 700) {
+                result = `
+                <div class="build">
+                    <h2>600€ - 699€</h2>
+                    CPU: Ryzen 5 5500<br>
+                    GPU: RX 6500 XT<br>
+                    RAM: 16GB DDR4<br>
+                    SSD: 1TB NVMe<br>
+                    Motherboard: B450M<br>
+                    Fonte: 550W Bronze<br>
+                    Caixa: MSI MAG Forge
+                </div>`;
+            }
+
+            else if (budget < 800) {
+                result = `
+                <div class="build">
+                    <h2>700€ - 799€</h2>
+                    CPU: Ryzen 5 5600<br>
+                    GPU: RX 6600<br>
+                    RAM: 16GB DDR4<br>
+                    SSD: 1TB NVMe<br>
+                    Motherboard: B550M<br>
+                    Fonte: 650W Bronze<br>
+                    Caixa: Kolink Observatory
+                </div>`;
+            }
+
+            else if (budget < 900) {
+                result = `
+                <div class="build">
+                    <h2>800€ - 899€</h2>
+                    CPU: i5-12400F<br>
+                    GPU: RTX 3060<br>
+                    RAM: 16GB DDR4<br>
+                    SSD: 1TB NVMe<br>
+                    Motherboard: B660M<br>
+                    Fonte: 650W Bronze<br>
+                    Caixa: NZXT H510
+                </div>`;
+            }
+
+            else if (budget < 1000) {
+                result = `
+                <div class="build">
+                    <h2>900€ - 999€</h2>
+                    CPU: Ryzen 5 7600<br>
+                    GPU: RTX 4060<br>
+                    RAM: 32GB DDR5<br>
+                    SSD: 1TB NVMe<br>
+                    Motherboard: B650M<br>
+                    Fonte: 750W Gold<br>
+                    Caixa: Corsair 3000D
+                </div>`;
+            }
+
+            else if (budget < 1200) {
+                result = `
+                <div class="build">
+                    <h2>1000€ - 1199€</h2>
+                    CPU: Ryzen 7 7700<br>
+                    GPU: RTX 4060 Ti<br>
+                    RAM: 32GB DDR5<br>
+                    SSD: 1TB NVMe<br>
+                    Motherboard: B650<br>
+                    Fonte: 750W Gold<br>
+                    Caixa: NZXT H5 Flow
+                </div>`;
+            }
+
+            else if (budget < 1500) {
+                result = `
+                <div class="build">
+                    <h2>1200€ - 1499€</h2>
+                    CPU: Ryzen 7 7800X3D<br>
+                    GPU: RTX 4070<br>
+                    RAM: 32GB DDR5<br>
+                    SSD: 2TB NVMe<br>
+                    Motherboard: X670<br>
+                    Fonte: 850W Gold<br>
+                    Caixa: Corsair 4000D
+                </div>`;
+            }
+
+            else if (budget < 2000) {
+                result = `
+                <div class="build">
+                    <h2>1500€ - 1999€</h2>
+                    CPU: i7-14700K<br>
+                    GPU: RTX 4070 Ti Super<br>
+                    RAM: 32GB DDR5<br>
+                    SSD: 2TB NVMe<br>
+                    Motherboard: Z790<br>
+                    Fonte: 850W Gold<br>
+                    Caixa: Lian Li Lancool III
+                </div>`;
+            }
+
+            else if (budget < 3000) {
+                result = `
+                <div class="build">
+                    <h2>2000€ - 2999€</h2>
+                    CPU: Ryzen 9 7950X3D<br>
+                    GPU: RTX 4080 Super<br>
+                    RAM: 64GB DDR5<br>
+                    SSD: 4TB NVMe<br>
+                    Motherboard: X670E<br>
+                    Fonte: 1000W Gold<br>
+                    Caixa: Lian Li O11 Dynamic
+                </div>`;
+            }
+
+            else {
+                result = `
+                <div class="build">
+                    <h2>3000€+</h2>
+                    CPU: i9 / Threadripper<br>
+                    GPU: RTX 4090<br>
+                    RAM: 64GB DDR5<br>
+                    SSD: 8TB NVMe<br>
+                    Motherboard: Enthusiast Board<br>
+                    Fonte: 1200W Platinum<br>
+                    Caixa: Full Tower Premium
+                </div>`;
+            }
+
+            document.getElementById("result").innerHTML = result;
+        }
+    </script>
 
 </body>
 </html>

@@ -1,10 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My First Site</title>
+  <title>PC Builder 💻</title>
 </head>
 <body>
-  <h1>Hello world 👋</h1>
-  <p>This is my website!</p>
+
+  <h1>💻 PC Builder</h1>
+  <p>Insere o teu orçamento (€):</p>
+
+  <input type="number" id="budget" placeholder="Ex: 800">
+  <button onclick="buildPC()">Gerar PC</button>
+
+  <h2>Resultado:</h2>
+  <p id="result"></p>
+
+  <script>
+    function buildPC() {
+      let budget = document.getElementById("budget").value;
+      let result = "";
+
+      if (budget < 500) {
+        result = "⚠️ Orçamento muito baixo — tenta pelo menos 500€";
+      } 
+      else if (budget < 800) {
+        result = "💻 Build básica:\nCPU: Ryzen 5 3600\nGPU: GTX 1660\nRAM: 16GB\nSSD: 500GB";
+      } 
+      else if (budget < 1200) {
+        result = "🔥 Build média:\nCPU: Ryzen 5 5600\nGPU: RX 6600\nRAM: 16GB\nSSD: 1TB";
+      } 
+      else {
+        result = "🚀 Build high-end:\nCPU: Ryzen 7 5800X\nGPU: RTX 4070\nRAM: 32GB\nSSD: 1TB NVMe";
+      }
+
+      document.getElementById("result").innerText = result;
+    }
+  </script>
+
 </body>
 </html>

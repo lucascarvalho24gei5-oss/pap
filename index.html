@@ -113,7 +113,7 @@
             const amazon = "https://www.amazon.es/s?k=";
             const pcdiga = "https://www.pcdiga.com/search?query=";
 
-            function part(name, info) {
+            function part(name, info = "Good value component") {
                 return `
                     <div class="part">
                         <strong>${name}</strong><br>
@@ -126,9 +126,15 @@
 
             function fpsInfo(fortnite, warzone, gta, valorant) {
                 return `
-                    <div class="part" style="background: rgba(56,189,248,0.15);">
+                    <div class="part" style="background: rgba(56,189,248,0.15); margin-top:15px;">
                         <h3>Estimated FPS 🎮</h3>
                         <p>Fortnite: ${fortnite} FPS</p>
+                        <p>Warzone: ${warzone} FPS</p>
+                        <p>GTA V: ${gta} FPS</p>
+                        <p>Valorant: ${valorant} FPS</p>
+                    </div>
+                `;
+            } FPS</p>
                         <p>Warzone: ${warzone} FPS</p>
                         <p>GTA V: ${gta} FPS</p>
                         <p>Valorant: ${valorant} FPS</p>
@@ -219,7 +225,7 @@
                 <div class="build-card">
                     <h2>€1200 - €1499</h2>
                     ${part("Ryzen 7 7800X3D")}
-                    ${part("RTX 4070", "Strong 1440p GPU for high settings")}
+                    ${part("RTX 4070", "Strong 1440p GPU for high settings")} ${fpsInfo(320, 160, 190, 500)}
                     ${part("32GB DDR5 RAM")}
                     ${part("2TB NVMe SSD")}
                     ${part("X670 Motherboard")}
@@ -245,7 +251,7 @@
                 <div class="build-card">
                     <h2>€2000 - €2999</h2>
                     ${part("Ryzen 9 7950X3D")}
-                    ${part("RTX 4080 Super", "Excellent 4K gaming GPU")}
+                    ${part("RTX 4080 Super", "Excellent 4K gaming GPU")} ${fpsInfo(450, 220, 250, 700)}
                     ${part("64GB DDR5 RAM")}
                     ${part("4TB NVMe SSD")}
                     ${part("X670E Motherboard")}

@@ -3,60 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PC Builder 💻</title>
-
+    <title>PC Builder Pro</title>
     <style>
-        body {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: Arial, sans-serif;
-            background: #111;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
             color: white;
             text-align: center;
-            padding: 20px;
+            min-height: 100vh;
+            padding: 30px;
         }
 
         h1 {
-            color: #00ffcc;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #38bdf8;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #cbd5e1;
+        }
+
+        .input-container {
+            margin-bottom: 30px;
         }
 
         input {
-            padding: 10px;
-            width: 200px;
-            font-size: 16px;
-            border-radius: 8px;
+            padding: 12px;
+            width: 220px;
             border: none;
+            border-radius: 10px;
+            font-size: 16px;
         }
 
         button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background: #00ffcc;
+            padding: 12px 20px;
+            background: #38bdf8;
+            color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
             margin-left: 10px;
         }
 
         button:hover {
-            background: #00ccaa;
+            background: #0284c7;
         }
 
-        .build {
-            background: #222;
-            margin: 20px auto;
-            padding: 20px;
-            width: 300px;
-            border-radius: 10px;
+        .build-card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0px 8px 25px rgba(0,0,0,0.4);
             text-align: left;
+        }
+
+        .build-card h2 {
+            color: #38bdf8;
+            margin-bottom: 20px;
+        }
+
+        .part {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .part a {
+            color: #22c55e;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .part a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <h1>PC Builder 💻</h1>
-    <p>Insere o teu orçamento (€):</p>
+    <h1>PC Builder Pro 💻</h1>
+    <p>Find the best gaming PC build for your budget</p>
 
-    <input type="number" id="budget" placeholder="Ex: 1000">
-    <button onclick="buildPC()">Gerar Build</button>
+    <div class="input-container">
+        <input type="number" id="budget" placeholder="Enter budget (€)">
+        <button onclick="buildPC()">Generate Build</button>
+    </div>
 
     <div id="result"></div>
 
@@ -65,161 +110,163 @@
             let budget = parseInt(document.getElementById("budget").value);
             let result = "";
 
-            if (budget < 400) {
-                result = "❌ Orçamento demasiado baixo.";
+            const amazon = "https://www.amazon.es/s?k=";
+            const pcdiga = "https://www.pcdiga.com/search?query=";
+
+            function part(name) {
+                return `
+                    <div class="part">
+                        ${name}<br>
+                        <a href="${amazon}${encodeURIComponent(name)}" target="_blank">Buy on Amazon</a> |
+                        <a href="${pcdiga}${encodeURIComponent(name)}" target="_blank">Buy on PCDiga</a>
+                    </div>
+                `;
             }
 
+            if (budget < 400) {
+                result = "<div class='build-card'><h2>Budget too low ❌</h2><p>Try at least €400 for a decent PC build.</p></div>";
+            }
             else if (budget < 500) {
                 result = `
-                <div class="build">
-                    <h2>400€ - 499€</h2>
-                    CPU: Ryzen 3 4100<br>
-                    GPU: GTX 1050 Ti<br>
-                    RAM: 16GB DDR4<br>
-                    SSD: 480GB SATA<br>
-                    Motherboard: A320M<br>
-                    Fonte: 500W Bronze<br>
-                    Caixa: Nox Lite
+                <div class="build-card">
+                    <h2>€400 - €499</h2>
+                    ${part("Ryzen 3 4100")}
+                    ${part("GTX 1050 Ti")}
+                    ${part("16GB DDR4 RAM")}
+                    ${part("480GB SSD")}
+                    ${part("A320 Motherboard")}
+                    ${part("500W PSU")}
+                    ${part("Nox Lite Case")}
                 </div>`;
             }
-
             else if (budget < 600) {
                 result = `
-                <div class="build">
-                    <h2>500€ - 599€</h2>
-                    CPU: Ryzen 5 4500<br>
-                    GPU: GTX 1650<br>
-                    RAM: 16GB DDR4<br>
-                    SSD: 500GB NVMe<br>
-                    Motherboard: A520M<br>
-                    Fonte: 550W Bronze<br>
-                    Caixa: Aerocool Bolt
+                <div class="build-card">
+                    <h2>€500 - €599</h2>
+                    ${part("Ryzen 5 4500")}
+                    ${part("GTX 1650")}
+                    ${part("16GB DDR4 RAM")}
+                    ${part("500GB NVMe SSD")}
+                    ${part("A520 Motherboard")}
+                    ${part("550W PSU")}
+                    ${part("Aerocool Bolt Case")}
                 </div>`;
             }
-
             else if (budget < 700) {
                 result = `
-                <div class="build">
-                    <h2>600€ - 699€</h2>
-                    CPU: Ryzen 5 5500<br>
-                    GPU: RX 6500 XT<br>
-                    RAM: 16GB DDR4<br>
-                    SSD: 1TB NVMe<br>
-                    Motherboard: B450M<br>
-                    Fonte: 550W Bronze<br>
-                    Caixa: MSI MAG Forge
+                <div class="build-card">
+                    <h2>€600 - €699</h2>
+                    ${part("Ryzen 5 5500")}
+                    ${part("RX 6500 XT")}
+                    ${part("16GB DDR4 RAM")}
+                    ${part("1TB NVMe SSD")}
+                    ${part("B450 Motherboard")}
+                    ${part("550W PSU")}
+                    ${part("MSI MAG Forge Case")}
                 </div>`;
             }
-
             else if (budget < 800) {
                 result = `
-                <div class="build">
-                    <h2>700€ - 799€</h2>
-                    CPU: Ryzen 5 5600<br>
-                    GPU: RX 6600<br>
-                    RAM: 16GB DDR4<br>
-                    SSD: 1TB NVMe<br>
-                    Motherboard: B550M<br>
-                    Fonte: 650W Bronze<br>
-                    Caixa: Kolink Observatory
+                <div class="build-card">
+                    <h2>€700 - €799</h2>
+                    ${part("Ryzen 5 5600")}
+                    ${part("RX 6600")}
+                    ${part("16GB DDR4 RAM")}
+                    ${part("1TB NVMe SSD")}
+                    ${part("B550 Motherboard")}
+                    ${part("650W PSU")}
+                    ${part("Kolink Observatory Case")}
                 </div>`;
             }
-
             else if (budget < 900) {
                 result = `
-                <div class="build">
-                    <h2>800€ - 899€</h2>
-                    CPU: i5-12400F<br>
-                    GPU: RTX 3060<br>
-                    RAM: 16GB DDR4<br>
-                    SSD: 1TB NVMe<br>
-                    Motherboard: B660M<br>
-                    Fonte: 650W Bronze<br>
-                    Caixa: NZXT H510
+                <div class="build-card">
+                    <h2>€800 - €899</h2>
+                    ${part("Intel i5-12400F")}
+                    ${part("RTX 3060")}
+                    ${part("16GB DDR4 RAM")}
+                    ${part("1TB NVMe SSD")}
+                    ${part("B660 Motherboard")}
+                    ${part("650W PSU")}
+                    ${part("NZXT H510 Case")}
                 </div>`;
             }
-
             else if (budget < 1000) {
                 result = `
-                <div class="build">
-                    <h2>900€ - 999€</h2>
-                    CPU: Ryzen 5 7600<br>
-                    GPU: RTX 4060<br>
-                    RAM: 32GB DDR5<br>
-                    SSD: 1TB NVMe<br>
-                    Motherboard: B650M<br>
-                    Fonte: 750W Gold<br>
-                    Caixa: Corsair 3000D
+                <div class="build-card">
+                    <h2>€900 - €999</h2>
+                    ${part("Ryzen 5 7600")}
+                    ${part("RTX 4060")}
+                    ${part("32GB DDR5 RAM")}
+                    ${part("1TB NVMe SSD")}
+                    ${part("B650 Motherboard")}
+                    ${part("750W Gold PSU")}
+                    ${part("Corsair 3000D Case")}
                 </div>`;
             }
-
             else if (budget < 1200) {
                 result = `
-                <div class="build">
-                    <h2>1000€ - 1199€</h2>
-                    CPU: Ryzen 7 7700<br>
-                    GPU: RTX 4060 Ti<br>
-                    RAM: 32GB DDR5<br>
-                    SSD: 1TB NVMe<br>
-                    Motherboard: B650<br>
-                    Fonte: 750W Gold<br>
-                    Caixa: NZXT H5 Flow
+                <div class="build-card">
+                    <h2>€1000 - €1199</h2>
+                    ${part("Ryzen 7 7700")}
+                    ${part("RTX 4060 Ti")}
+                    ${part("32GB DDR5 RAM")}
+                    ${part("1TB NVMe SSD")}
+                    ${part("B650 Motherboard")}
+                    ${part("750W Gold PSU")}
+                    ${part("NZXT H5 Flow")}
                 </div>`;
             }
-
             else if (budget < 1500) {
                 result = `
-                <div class="build">
-                    <h2>1200€ - 1499€</h2>
-                    CPU: Ryzen 7 7800X3D<br>
-                    GPU: RTX 4070<br>
-                    RAM: 32GB DDR5<br>
-                    SSD: 2TB NVMe<br>
-                    Motherboard: X670<br>
-                    Fonte: 850W Gold<br>
-                    Caixa: Corsair 4000D
+                <div class="build-card">
+                    <h2>€1200 - €1499</h2>
+                    ${part("Ryzen 7 7800X3D")}
+                    ${part("RTX 4070")}
+                    ${part("32GB DDR5 RAM")}
+                    ${part("2TB NVMe SSD")}
+                    ${part("X670 Motherboard")}
+                    ${part("850W Gold PSU")}
+                    ${part("Corsair 4000D")}
                 </div>`;
             }
-
             else if (budget < 2000) {
                 result = `
-                <div class="build">
-                    <h2>1500€ - 1999€</h2>
-                    CPU: i7-14700K<br>
-                    GPU: RTX 4070 Ti Super<br>
-                    RAM: 32GB DDR5<br>
-                    SSD: 2TB NVMe<br>
-                    Motherboard: Z790<br>
-                    Fonte: 850W Gold<br>
-                    Caixa: Lian Li Lancool III
+                <div class="build-card">
+                    <h2>€1500 - €1999</h2>
+                    ${part("Intel i7-14700K")}
+                    ${part("RTX 4070 Ti Super")}
+                    ${part("32GB DDR5 RAM")}
+                    ${part("2TB NVMe SSD")}
+                    ${part("Z790 Motherboard")}
+                    ${part("850W Gold PSU")}
+                    ${part("Lian Li Lancool III")}
                 </div>`;
             }
-
             else if (budget < 3000) {
                 result = `
-                <div class="build">
-                    <h2>2000€ - 2999€</h2>
-                    CPU: Ryzen 9 7950X3D<br>
-                    GPU: RTX 4080 Super<br>
-                    RAM: 64GB DDR5<br>
-                    SSD: 4TB NVMe<br>
-                    Motherboard: X670E<br>
-                    Fonte: 1000W Gold<br>
-                    Caixa: Lian Li O11 Dynamic
+                <div class="build-card">
+                    <h2>€2000 - €2999</h2>
+                    ${part("Ryzen 9 7950X3D")}
+                    ${part("RTX 4080 Super")}
+                    ${part("64GB DDR5 RAM")}
+                    ${part("4TB NVMe SSD")}
+                    ${part("X670E Motherboard")}
+                    ${part("1000W Gold PSU")}
+                    ${part("Lian Li O11 Dynamic")}
                 </div>`;
             }
-
             else {
                 result = `
-                <div class="build">
-                    <h2>3000€+</h2>
-                    CPU: i9 / Threadripper<br>
-                    GPU: RTX 4090<br>
-                    RAM: 64GB DDR5<br>
-                    SSD: 8TB NVMe<br>
-                    Motherboard: Enthusiast Board<br>
-                    Fonte: 1200W Platinum<br>
-                    Caixa: Full Tower Premium
+                <div class="build-card">
+                    <h2>€3000+</h2>
+                    ${part("Intel i9 / Threadripper")}
+                    ${part("RTX 4090")}
+                    ${part("64GB DDR5 RAM")}
+                    ${part("8TB NVMe SSD")}
+                    ${part("High-End Motherboard")}
+                    ${part("1200W Platinum PSU")}
+                    ${part("Full Tower Premium Case")}
                 </div>`;
             }
 

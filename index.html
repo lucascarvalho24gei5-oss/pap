@@ -107,8 +107,19 @@
 
     <script>
         function buildPC() {
-            let budget = parseInt(document.getElementById("budget").value);
+            const budgetInput = document.getElementById("budget").value.trim();
+            const budget = parseInt(budgetInput);
             let result = "";
+
+            // Validation
+            if (!budgetInput || isNaN(budget)) {
+                document.getElementById("result").innerHTML = `
+                    <div class="build-card">
+                        <h2>Enter a valid budget 💸</h2>
+                        <p>Please type a number like 800, 1200, etc.</p>
+                    </div>`;
+                return;
+            }
 
             const amazon = "https://www.amazon.es/s?k=";
             const pcdiga = "https://www.pcdiga.com/search?query=";
@@ -273,6 +284,7 @@
                 </div>`;
             }
 
+            console.log("Budget entered:", budget);
             document.getElementById("result").innerHTML = result;
         }
     </script>

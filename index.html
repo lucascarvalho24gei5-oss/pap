@@ -115,15 +115,17 @@
 <p>Custom PC builds by budget</p>
 
 <div class="input-container">
-    <input type="number" id="budget" placeholder="Enter budget (€)">
-    <button onclick="buildPC()">Generate Build</button>
+    <input type="text" id="userPrompt" placeholder="Ex: I have €900 for a gaming PC">
+    <button onclick="buildPC()">Ask AI</button>
 </div>
 
 <div id="result"></div>
 
 <script>
 function buildPC() {
-    let budget = parseInt(document.getElementById("budget").value);
+    let prompt = document.getElementById("userPrompt").value.toLowerCase();
+    let budgetMatch = prompt.match(/\d+/);
+    let budget = budgetMatch ? parseInt(budgetMatch[0]) : NaN;
     let result = "";
 
     const amazon = "https://www.amazon.es/s?k=";
@@ -149,7 +151,17 @@ function buildPC() {
         </div>`;
     }
 
-    if (budget < 400) {
+    if (!budget) {
+        result = `
+        <div class='build-card'>
+            <h2>BuildForge AI 🤖</h2>
+            <p>Tell me your budget naturally:</p>
+            <p><strong>“I have €800”</strong></p>
+            <p><strong>“Build me a €1500 gaming PC”</strong></p>
+        </div>`;
+    }
+
+    else if (budget < 400) {
         result = `<div class='build-card'><h2>Minimum €400 required</h2></div>`;
     }
 

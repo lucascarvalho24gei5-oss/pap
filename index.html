@@ -106,114 +106,124 @@
     <div id="result"></div>
 
     <script>
-        // Make helper functions global too
-        window.part = function(name, info = "Good value component") {
-            return `
-                <div class="part">
-                    <strong>${name}</strong><br>
-                    <small style="color:#cbd5e1;">${info}</small><br><br>
-                    <a href="${amazon}${encodeURIComponent(name)}" target="_blank">Buy on Amazon</a> |
-                    <a href="${pcdiga}${encodeURIComponent(name)}" target="_blank">Buy on PCDiga</a>
-                </div>
-            `;
-        }
+function buildPC() {
+    let budget = parseInt(document.getElementById("budget").value);
+    let result = "";
 
-        window.fpsInfo = function(fortnite, warzone, gta, valorant) {
-            return `
-                <div class="part" style="background: rgba(56,189,248,0.15); margin-top:15px;">
-                    <h3>Estimated FPS 🎮</h3>
-                    <p>Fortnite: ${fortnite} FPS</p>
-                    <p>Warzone: ${warzone} FPS</p>
-                    <p>GTA V: ${gta} FPS</p>
-                    <p>Valorant: ${valorant} FPS</p>
-                </div>
-            `;
-        }
+    if (isNaN(budget)) {
+        document.getElementById("result").innerHTML =
+            "<div class='build-card'><h2>Please enter a valid budget</h2></div>";
+        return;
+    }
 
-        window.buildPC = function() {
-            const budgetValue = document.getElementById("budget").value;
-            const budget = Number(budgetValue);
-            const resultDiv = document.getElementById("result");
+    const amazon = "https://www.amazon.es/s?k=";
+    const pcdiga = "https://www.pcdiga.com/search?query=";
 
-            if (!budgetValue || isNaN(budget)) {
-                resultDiv.innerHTML = `
-                    <div class="build-card">
-                        <h2>Enter a valid budget 💸</h2>
-                        <p>Example: 800, 1200, 2000</p>
-                    </div>`;
-                return;
-            }
+    function part(name, info) {
+        return `
+            <div class="part">
+                <strong>${name}</strong><br>
+                <small style="color:#cbd5e1;">${info}</small><br><br>
+                
+                <a href="${amazon}${encodeURIComponent(name)}" target="_blank">
+                    Amazon
+                </a> |
+                
+                <a href="${pcdiga}${encodeURIComponent(name)}" target="_blank">
+                    PCDiga
+                </a>
+            </div>
+        `;
+    }
 
-            const builds = [
-                {
-                    min: 400,
-                    max: 799,
-                    title: "Budget Build (€400-799)",
-                    parts: [
-                        part("Ryzen 5 5600", "6 cores / 12 threads - great value"),
-                        part("RX 6600", "Excellent 1080p gaming GPU"),
-                        part("16GB DDR4 RAM", "Perfect for gaming"),
-                        part("1TB NVMe SSD", "Fast loading times"),
-                        part("B550 Motherboard", "Good upgrade path"),
-                        part("650W PSU", "Reliable power supply"),
-                        part("Kolink Observatory Case", "RGB airflow case")
-                    ],
-                    fps: fpsInfo(180, 90, 120, 300)
-                },
-                {
-                    min: 800,
-                    max: 1499,
-                    title: "Mid Range Build (€800-1499)",
-                    parts: [
-                        part("Ryzen 5 7600", "Modern AM5 CPU"),
-                        part("RTX 4060", "Great 1080p/1440p GPU"),
-                        part("32GB DDR5 RAM", "Future-proof RAM"),
-                        part("1TB NVMe SSD", "Fast storage"),
-                        part("B650 Motherboard", "AM5 support"),
-                        part("750W Gold PSU", "Efficient PSU"),
-                        part("NZXT H5 Flow", "Premium airflow case")
-                    ],
-                    fps: fpsInfo(240, 120, 160, 450)
-                },
-                {
-                    min: 1500,
-                    max: 999999,
-                    title: "High-End Build (€1500+)",
-                    parts: [
-                        part("Ryzen 7 7800X3D", "One of the best gaming CPUs"),
-                        part("RTX 4070 Super", "Excellent 1440p GPU"),
-                        part("32GB DDR5 RAM", "High-performance memory"),
-                        part("2TB NVMe SSD", "Large fast storage"),
-                        part("X670 Motherboard", "High-end AM5 board"),
-                        part("850W Gold PSU", "Ready for upgrades"),
-                        part("Corsair 4000D", "Popular premium case")
-                    ],
-                    fps: fpsInfo(320, 160, 190, 500)
-                }
-            ];
+    function fpsInfo(fortnite, warzone, gta, valorant) {
+        return `
+            <div class="part" style="background: rgba(56,189,248,0.15);">
+                <h3>Estimated FPS 🎮</h3>
+                <p>Fortnite: ${fortnite} FPS</p>
+                <p>Warzone: ${warzone} FPS</p>
+                <p>GTA V: ${gta} FPS</p>
+                <p>Valorant: ${valorant} FPS</p>
+            </div>
+        `;
+    }
 
-            const selectedBuild = builds.find(build => budget >= build.min && budget <= build.max);
+    if (budget < 400) {
+        result = `
+        <div class="build-card">
+            <h2>Budget too low ❌</h2>
+            <p>Try at least €400</p>
+        </div>`;
+    }
 
-            if (!selectedBuild) {
-                resultDiv.innerHTML = `
-                    <div class="build-card">
-                        <h2>Budget too low ❌</h2>
-                        <p>Minimum recommended budget is €400.</p>
-                    </div>`;
-                return;
-            }
+    else if (budget < 800) {
+        result = `
+        <div class="build-card">
+            <h2>Budget Build (€400-799)</h2>
 
-            resultDiv.innerHTML = `
-                <div class="build-card">
-                    <h2>${selectedBuild.title}</h2>
-                    ${selectedBuild.parts.join("")}
-                    ${selectedBuild.fps}
-                </div>`;
-        }
-    
-        // safer than inline onclick
-        document.getElementById("generateBtn").addEventListener("click", window.buildPC);
-    </script>
+            ${part("Ryzen 5 5600", "6 cores / 12 threads - great value CPU")}
+            ${part("RX 6600", "Excellent 1080p gaming GPU")}
+            ${part("16GB DDR4 RAM", "Enough for modern gaming")}
+            ${part("1TB NVMe SSD", "Fast storage")}
+            ${part("B550 Motherboard", "Good upgrade path")}
+            ${part("650W PSU", "Reliable power supply")}
+            ${part("Kolink Observatory Case", "RGB airflow case")}
 
-</body>
-</html>
+            ${fpsInfo(180, 90, 120, 300)}
+        </div>`;
+    }
+
+    else if (budget < 1500) {
+        result = `
+        <div class="build-card">
+            <h2>Mid Range Build (€800-1499)</h2>
+
+            ${part("Ryzen 5 7600", "Modern AM5 gaming CPU")}
+            ${part("RTX 4060", "Great 1080p/1440p GPU")}
+            ${part("32GB DDR5 RAM", "Future-proof RAM")}
+            ${part("1TB NVMe SSD", "Fast load times")}
+            ${part("B650 Motherboard", "AM5 platform")}
+            ${part("750W Gold PSU", "Efficient PSU")}
+            ${part("NZXT H5 Flow", "Premium airflow case")}
+
+            ${fpsInfo(240, 120, 160, 450)}
+        </div>`;
+    }
+
+    else if (budget < 3000) {
+        result = `
+        <div class="build-card">
+            <h2>High-End Build (€1500-2999)</h2>
+
+            ${part("Ryzen 7 7800X3D", "One of the best gaming CPUs")}
+            ${part("RTX 4070 Ti Super", "Excellent 1440p GPU")}
+            ${part("32GB DDR5 RAM", "High performance memory")}
+            ${part("2TB NVMe SSD", "Large fast storage")}
+            ${part("X670 Motherboard", "Premium motherboard")}
+            ${part("850W Gold PSU", "Upgrade-ready")}
+            ${part("Corsair 4000D", "Premium case")}
+
+            ${fpsInfo(320, 160, 190, 500)}
+        </div>`;
+    }
+
+    else {
+        result = `
+        <div class="build-card">
+            <h2>Extreme Build (€3000+)</h2>
+
+            ${part("Ryzen 9 7950X3D", "Extreme gaming/workstation CPU")}
+            ${part("RTX 4090", "Best GPU available")}
+            ${part("64GB DDR5 RAM", "Heavy multitasking")}
+            ${part("4TB NVMe SSD", "Huge storage")}
+            ${part("X670E Motherboard", "Enthusiast board")}
+            ${part("1200W PSU", "Maximum power")}
+            ${part("Lian Li O11 Dynamic", "Premium showcase case")}
+
+            ${fpsInfo(500, 220, 300, 800)}
+        </div>`;
+    }
+
+    document.getElementById("result").innerHTML = result;
+}
+</script>

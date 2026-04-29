@@ -106,6 +106,30 @@
     <div id="result"></div>
 
     <script>
+        // Make helper functions global too
+        window.part = function(name, info = "Good value component") {
+            return `
+                <div class="part">
+                    <strong>${name}</strong><br>
+                    <small style="color:#cbd5e1;">${info}</small><br><br>
+                    <a href="${amazon}${encodeURIComponent(name)}" target="_blank">Buy on Amazon</a> |
+                    <a href="${pcdiga}${encodeURIComponent(name)}" target="_blank">Buy on PCDiga</a>
+                </div>
+            `;
+        }
+
+        window.fpsInfo = function(fortnite, warzone, gta, valorant) {
+            return `
+                <div class="part" style="background: rgba(56,189,248,0.15); margin-top:15px;">
+                    <h3>Estimated FPS 🎮</h3>
+                    <p>Fortnite: ${fortnite} FPS</p>
+                    <p>Warzone: ${warzone} FPS</p>
+                    <p>GTA V: ${gta} FPS</p>
+                    <p>Valorant: ${valorant} FPS</p>
+                </div>
+            `;
+        }
+
         window.buildPC = function() {
             const budgetValue = document.getElementById("budget").value;
             const budget = Number(budgetValue);

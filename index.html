@@ -14,7 +14,7 @@
         }
 
         body {
-            background: radial-gradient(circle at top, #0b1020, #050814);
+            background: radial-gradient(circle at top left, #0a0f2c, #05010f);
             color: #e5e7eb;
             text-align: center;
             min-height: 100vh;
@@ -24,12 +24,14 @@
         h1 {
             font-size: 3rem;
             margin-bottom: 10px;
-            color: #a78bfa;
+            background: linear-gradient(90deg, #00f5ff, #ff2bd6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         p {
             margin-bottom: 20px;
-            color: #94a3b8;
+            color: #a5b4fc;
         }
 
         .input-container {
@@ -40,17 +42,20 @@
             padding: 12px;
             width: 220px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
             outline: none;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            border: 1px solid rgba(0,245,255,0.3);
         }
 
         button {
             padding: 12px 20px;
-            background: #a78bfa;
+            background: linear-gradient(90deg, #00f5ff, #ff2bd6);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 16px;
             font-weight: bold;
@@ -58,22 +63,22 @@
         }
 
         button:hover {
-            background: #7c3aed;
+            transform: scale(1.05);
         }
 
         .build-card {
             background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(14px);
             max-width: 650px;
             margin: auto;
             padding: 25px;
             border-radius: 20px;
-            box-shadow: 0px 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0px 0px 25px rgba(0,245,255,0.15);
             text-align: left;
         }
 
         .build-card h2 {
-            color: #a78bfa;
+            color: #00f5ff;
             margin-bottom: 20px;
         }
 
@@ -81,15 +86,16 @@
             margin-bottom: 12px;
             padding: 12px;
             background: rgba(255,255,255,0.05);
-            border-radius: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
         }
 
         .part small {
-            color: #94a3b8;
+            color: #c7d2fe;
         }
 
         .part a {
-            color: #34d399;
+            color: #ff2bd6;
             text-decoration: none;
             font-weight: bold;
         }
@@ -97,8 +103,9 @@
         .fps {
             margin-top: 15px;
             padding: 12px;
-            background: rgba(167,139,250,0.15);
-            border-radius: 10px;
+            background: rgba(0,245,255,0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(0,245,255,0.2);
         }
     </style>
 </head>
@@ -148,12 +155,12 @@ function buildPC() {
 
     else if (budget < 500) {
         result = `<div class="build-card"><h2>€400 - €499</h2>
-        ${part("Ryzen 3 4100","Entry gaming CPU")}
-        ${part("GTX 1050 Ti","Basic 1080p GPU")}
-        ${part("16GB DDR4","Good for gaming")}
-        ${part("480GB SSD","Basic storage")}
+        ${part("Ryzen 3 4100","Entry CPU")}
+        ${part("GTX 1050 Ti","Basic GPU")}
+        ${part("16GB DDR4","RAM")}
+        ${part("480GB SSD","Storage")}
         ${part("A320 Motherboard","Entry board")}
-        ${part("500W PSU","Basic power")}
+        ${part("500W PSU","Power")}
         ${part("Case","Budget case")}
         ${fps(120,60,80,200)}
         </div>`;
@@ -161,128 +168,128 @@ function buildPC() {
 
     else if (budget < 600) {
         result = `<div class="build-card"><h2>€500 - €599</h2>
-        ${part("Ryzen 5 4500","Good budget CPU")}
+        ${part("Ryzen 5 4500","Good CPU")}
         ${part("GTX 1650","Entry GPU")}
-        ${part("16GB DDR4","Gaming RAM")}
-        ${part("500GB NVMe","Fast storage")}
-        ${part("A520 Motherboard","Upgrade path")}
-        ${part("550W PSU","Stable power")}
-        ${part("Case","Airflow case")}
+        ${part("16GB DDR4","RAM")}
+        ${part("500GB NVMe","SSD")}
+        ${part("A520 Motherboard","Board")}
+        ${part("550W PSU","Power")}
+        ${part("Case","Case")}
         ${fps(140,70,90,220)}
         </div>`;
     }
 
     else if (budget < 700) {
         result = `<div class="build-card"><h2>€600 - €699</h2>
-        ${part("Ryzen 5 5500","Solid gaming CPU")}
+        ${part("Ryzen 5 5500","Solid CPU")}
         ${part("RX 6500 XT","1080p GPU")}
-        ${part("16GB DDR4","Standard RAM")}
-        ${part("1TB NVMe","Fast SSD")}
-        ${part("B450 Motherboard","Stable board")}
-        ${part("550W PSU","Reliable PSU")}
-        ${part("Case","Airflow case")}
+        ${part("16GB DDR4","RAM")}
+        ${part("1TB NVMe","SSD")}
+        ${part("B450 Motherboard","Board")}
+        ${part("550W PSU","Power")}
+        ${part("Case","Case")}
         ${fps(160,80,100,240)}
         </div>`;
     }
 
     else if (budget < 800) {
         result = `<div class="build-card"><h2>€700 - €799</h2>
-        ${part("Ryzen 5 5600","Great value CPU")}
-        ${part("RX 6600","Best 1080p GPU")}
-        ${part("16GB DDR4","Gaming standard")}
-        ${part("1TB NVMe","Fast SSD")}
-        ${part("B550 Motherboard","Good upgrade path")}
-        ${part("650W PSU","Stable power")}
-        ${part("Case","RGB airflow")}
+        ${part("Ryzen 5 5600","Best value CPU")}
+        ${part("RX 6600","Strong GPU")}
+        ${part("16GB DDR4","RAM")}
+        ${part("1TB NVMe","SSD")}
+        ${part("B550 Motherboard","Board")}
+        ${part("650W PSU","Power")}
+        ${part("Case","Case")}
         ${fps(180,90,120,300)}
         </div>`;
     }
 
     else if (budget < 900) {
         result = `<div class="build-card"><h2>€800 - €899</h2>
-        ${part("i5-12400F","Strong Intel CPU")}
-        ${part("RTX 3060","Great 1080p GPU")}
-        ${part("16GB DDR4","Good RAM")}
-        ${part("1TB NVMe","Fast storage")}
-        ${part("B660 Motherboard","Intel board")}
-        ${part("650W PSU","Stable PSU")}
-        ${part("Case","Mid tower")}
+        ${part("i5-12400F","Intel CPU")}
+        ${part("RTX 3060","GPU")}
+        ${part("16GB DDR4","RAM")}
+        ${part("1TB NVMe","SSD")}
+        ${part("B660 Motherboard","Board")}
+        ${part("650W PSU","Power")}
+        ${part("Case","Case")}
         ${fps(200,100,130,320)}
         </div>`;
     }
 
     else if (budget < 1000) {
         result = `<div class="build-card"><h2>€900 - €999</h2>
-        ${part("Ryzen 5 7600","AM5 CPU")}
-        ${part("RTX 4060","Modern GPU")}
-        ${part("32GB DDR5","Fast RAM")}
-        ${part("1TB NVMe","Fast SSD")}
-        ${part("B650 Motherboard","AM5 board")}
-        ${part("750W PSU","Efficient PSU")}
-        ${part("Case","Airflow")}
+        ${part("Ryzen 5 7600","CPU")}
+        ${part("RTX 4060","GPU")}
+        ${part("32GB DDR5","RAM")}
+        ${part("1TB NVMe","SSD")}
+        ${part("B650 Motherboard","Board")}
+        ${part("750W PSU","Power")}
+        ${part("Case","Case")}
         ${fps(240,120,160,450)}
         </div>`;
     }
 
     else if (budget < 1200) {
         result = `<div class="build-card"><h2>€1000 - €1199</h2>
-        ${part("Ryzen 7 7700","Strong CPU")}
-        ${part("RTX 4060 Ti","Better GPU")}
-        ${part("32GB DDR5","Fast RAM")}
-        ${part("1TB NVMe","Fast SSD")}
-        ${part("B650 Motherboard","AM5 board")}
-        ${part("750W PSU","Gold PSU")}
-        ${part("Case","Premium case")}
+        ${part("Ryzen 7 7700","CPU")}
+        ${part("RTX 4060 Ti","GPU")}
+        ${part("32GB DDR5","RAM")}
+        ${part("1TB NVMe","SSD")}
+        ${part("B650 Motherboard","Board")}
+        ${part("750W PSU","Power")}
+        ${part("Case","Case")}
         ${fps(260,130,170,500)}
         </div>`;
     }
 
     else if (budget < 1500) {
         result = `<div class="build-card"><h2>€1200 - €1499</h2>
-        ${part("Ryzen 7 7800X3D","Best gaming CPU")}
-        ${part("RTX 4070","1440p GPU")}
-        ${part("32GB DDR5","High speed RAM")}
-        ${part("2TB NVMe","Large storage")}
-        ${part("X670 Motherboard","High-end board")}
-        ${part("850W PSU","Strong PSU")}
-        ${part("Case","Premium case")}
+        ${part("Ryzen 7 7800X3D","Best CPU")}
+        ${part("RTX 4070","GPU")}
+        ${part("32GB DDR5","RAM")}
+        ${part("2TB NVMe","SSD")}
+        ${part("X670 Motherboard","Board")}
+        ${part("850W PSU","Power")}
+        ${part("Case","Case")}
         ${fps(320,160,190,500)}
         </div>`;
     }
 
     else if (budget < 2000) {
         result = `<div class="build-card"><h2>€1500 - €1999</h2>
-        ${part("i7-14700K","High-end CPU")}
-        ${part("RTX 4070 Ti Super","High GPU")}
-        ${part("32GB DDR5","Fast RAM")}
-        ${part("2TB NVMe","Storage")}
-        ${part("Z790 Motherboard","Intel high-end")}
-        ${part("850W PSU","Strong PSU")}
-        ${part("Case","Premium case")}
+        ${part("i7-14700K","CPU")}
+        ${part("RTX 4070 Ti Super","GPU")}
+        ${part("32GB DDR5","RAM")}
+        ${part("2TB NVMe","SSD")}
+        ${part("Z790 Motherboard","Board")}
+        ${part("850W PSU","Power")}
+        ${part("Case","Case")}
         ${fps(380,180,220,600)}
         </div>`;
     }
 
     else if (budget < 3000) {
         result = `<div class="build-card"><h2>€2000 - €2999</h2>
-        ${part("Ryzen 9 7950X3D","Top CPU")}
-        ${part("RTX 4080 Super","4K GPU")}
-        ${part("64GB DDR5","Extreme RAM")}
-        ${part("4TB NVMe","Huge storage")}
-        ${part("X670E Motherboard","Enthusiast")}
-        ${part("1000W PSU","Powerful PSU")}
-        ${part("Case","Showcase case")}
+        ${part("Ryzen 9 7950X3D","CPU")}
+        ${part("RTX 4080 Super","GPU")}
+        ${part("64GB DDR5","RAM")}
+        ${part("4TB NVMe","SSD")}
+        ${part("X670E Motherboard","Board")}
+        ${part("1000W PSU","Power")}
+        ${part("Case","Case")}
         ${fps(450,220,260,700)}
         </div>`;
     }
 
     else {
         result = `<div class="build-card"><h2>€3000+</h2>
-        ${part("RTX 4090 Build","Extreme performance")}
-        ${part("64GB DDR5","Ultra RAM")}
-        ${part("8TB NVMe","Massive storage")}
-        ${part("1200W PSU","Extreme power")}
-        ${part("Full Tower","Premium case")}
+        ${part("RTX 4090 Build","Extreme")}
+        ${part("64GB DDR5","RAM")}
+        ${part("8TB NVMe","SSD")}
+        ${part("1200W PSU","Power")}
+        ${part("Case","Case")}
         ${fps(600,300,350,900)}
         </div>`;
     }

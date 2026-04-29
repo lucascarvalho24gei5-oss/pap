@@ -113,31 +113,27 @@
             const amazon = "https://www.amazon.es/s?k=";
             const pcdiga = "https://www.pcdiga.com/search?query=";
 
-            function part(name) {
+            function part(name, info) {
                 return `
                     <div class="part">
-                        ${name}<br>
+                        <strong>${name}</strong><br>
+                        <small style="color:#cbd5e1;">${info}</small><br><br>
                         <a href="${amazon}${encodeURIComponent(name)}" target="_blank">Buy on Amazon</a> |
                         <a href="${pcdiga}${encodeURIComponent(name)}" target="_blank">Buy on PCDiga</a>
                     </div>
                 `;
             }
 
-            if (budget < 400) {
-                result = "<div class='build-card'><h2>Budget too low ❌</h2><p>Try at least €400 for a decent PC build.</p></div>";
-            }
-            else if (budget < 500) {
-                result = `
-                <div class="build-card">
-                    <h2>€400 - €499</h2>
-                    ${part("Ryzen 3 4100")}
-                    ${part("GTX 1050 Ti")}
-                    ${part("16GB DDR4 RAM")}
-                    ${part("480GB SSD")}
-                    ${part("A320 Motherboard")}
-                    ${part("500W PSU")}
-                    ${part("Nox Lite Case")}
-                </div>`;
+            function fpsInfo(fortnite, warzone, gta, valorant) {
+                return `
+                    <div class="part" style="background: rgba(56,189,248,0.15);">
+                        <h3>Estimated FPS 🎮</h3>
+                        <p>Fortnite: ${fortnite} FPS</p>
+                        <p>Warzone: ${warzone} FPS</p>
+                        <p>GTA V: ${gta} FPS</p>
+                        <p>Valorant: ${valorant} FPS</p>
+                    </div>
+                `;
             }
             else if (budget < 600) {
                 result = `
@@ -145,7 +141,7 @@
                     <h2>€500 - €599</h2>
                     ${part("Ryzen 5 4500")}
                     ${part("GTX 1650")}
-                    ${part("16GB DDR4 RAM")}
+                    ${part("16GB DDR4 RAM", "Perfect for modern gaming")}
                     ${part("500GB NVMe SSD")}
                     ${part("A520 Motherboard")}
                     ${part("550W PSU")}
@@ -159,7 +155,7 @@
                     ${part("Ryzen 5 5500")}
                     ${part("RX 6500 XT")}
                     ${part("16GB DDR4 RAM")}
-                    ${part("1TB NVMe SSD")}
+                    ${part("1TB NVMe SSD", "Fast storage and quick load times")}
                     ${part("B450 Motherboard")}
                     ${part("550W PSU")}
                     ${part("MSI MAG Forge Case")}
@@ -169,13 +165,14 @@
                 result = `
                 <div class="build-card">
                     <h2>€700 - €799</h2>
-                    ${part("Ryzen 5 5600")}
-                    ${part("RX 6600")}
+                    ${part("Ryzen 5 5600", "6 cores / 12 threads - Great budget gaming CPU")}
+                    ${part("RX 6600", "Excellent 1080p gaming GPU")}
                     ${part("16GB DDR4 RAM")}
                     ${part("1TB NVMe SSD")}
-                    ${part("B550 Motherboard")}
-                    ${part("650W PSU")}
-                    ${part("Kolink Observatory Case")}
+                    ${part("B550 Motherboard", "Supports Ryzen CPUs with upgrade path")}
+                    ${part("650W PSU", "Reliable power supply for upgrades")}
+                    ${part("Kolink Observatory Case", "RGB case with airflow")}
+                    ${fpsInfo(180, 90, 120, 300)}
                 </div>`;
             }
             else if (budget < 900) {
@@ -196,7 +193,7 @@
                 <div class="build-card">
                     <h2>€900 - €999</h2>
                     ${part("Ryzen 5 7600")}
-                    ${part("RTX 4060")}
+                    ${part("RTX 4060", "Great 1080p/1440p GPU with DLSS support")}
                     ${part("32GB DDR5 RAM")}
                     ${part("1TB NVMe SSD")}
                     ${part("B650 Motherboard")}
@@ -222,7 +219,7 @@
                 <div class="build-card">
                     <h2>€1200 - €1499</h2>
                     ${part("Ryzen 7 7800X3D")}
-                    ${part("RTX 4070")}
+                    ${part("RTX 4070", "Strong 1440p GPU for high settings")}
                     ${part("32GB DDR5 RAM")}
                     ${part("2TB NVMe SSD")}
                     ${part("X670 Motherboard")}
@@ -248,7 +245,7 @@
                 <div class="build-card">
                     <h2>€2000 - €2999</h2>
                     ${part("Ryzen 9 7950X3D")}
-                    ${part("RTX 4080 Super")}
+                    ${part("RTX 4080 Super", "Excellent 4K gaming GPU")}
                     ${part("64GB DDR5 RAM")}
                     ${part("4TB NVMe SSD")}
                     ${part("X670E Motherboard")}

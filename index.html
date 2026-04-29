@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuildForge 💻</title>
+    <title>BuildForge AI 💻</title>
 
     <style>
         * {
@@ -38,20 +38,23 @@
             margin-bottom: 30px;
         }
 
-        input {
-            padding: 12px;
-            width: 220px;
-            border: none;
-            border-radius: 12px;
+        textarea {
+            padding: 15px;
+            width: 100%;
+            max-width: 650px;
+            height: 120px;
+            border-radius: 16px;
             font-size: 16px;
             outline: none;
             background: rgba(255,255,255,0.08);
             color: white;
             border: 1px solid rgba(0,245,255,0.3);
+            resize: none;
         }
 
         button {
-            padding: 12px 20px;
+            margin-top: 15px;
+            padding: 12px 25px;
             background: linear-gradient(90deg, #00f5ff, #ff2bd6);
             color: white;
             border: none;
@@ -59,7 +62,6 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: bold;
-            margin-left: 10px;
         }
 
         button:hover {
@@ -69,244 +71,84 @@
         .build-card {
             background: rgba(255,255,255,0.06);
             backdrop-filter: blur(14px);
-            max-width: 650px;
+            max-width: 750px;
             margin: auto;
             padding: 25px;
             border-radius: 20px;
             box-shadow: 0px 0px 25px rgba(0,245,255,0.15);
             text-align: left;
+            white-space: pre-wrap;
+            line-height: 1.6;
         }
 
         .build-card h2 {
             color: #00f5ff;
             margin-bottom: 20px;
         }
-
-        .part {
-            margin-bottom: 12px;
-            padding: 12px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.06);
-        }
-
-        .part small {
-            color: #c7d2fe;
-        }
-
-        .part a {
-            color: #ff2bd6;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .fps {
-            margin-top: 15px;
-            padding: 12px;
-            background: rgba(0,245,255,0.1);
-            border-radius: 12px;
-            border: 1px solid rgba(0,245,255,0.2);
-        }
     </style>
 </head>
 <body>
 
-<h1>BuildForge 💻</h1>
-<p>Custom PC builds by budget</p>
+<h1>BuildForge AI 💻</h1>
+<p>Ask for a custom gaming PC build and let AI recommend the parts</p>
 
 <div class="input-container">
-    <input type="text" id="userPrompt" placeholder="Ex: I have €900 for a gaming PC">
-    <button onclick="buildPC()">Ask AI</button>
+    <textarea id="userPrompt" placeholder="Example: I have €1200 and want a gaming PC for Fortnite, Warzone and GTA V"></textarea>
+    <br>
+    <button onclick="askAI()">Ask AI</button>
 </div>
 
 <div id="result"></div>
 
 <script>
-function buildPC() {
-    let prompt = document.getElementById("userPrompt").value.toLowerCase();
-    let budgetMatch = prompt.match(/\d+/);
-    let budget = budgetMatch ? parseInt(budgetMatch[0]) : NaN;
-    let result = "";
+async function askAI() {
+    const prompt = document.getElementById("userPrompt").value.trim();
+    const resultDiv = document.getElementById("result");
 
-    const amazon = "https://www.amazon.es/s?k=";
-    const pcdiga = "https://www.pcdiga.com/search?query=";
-
-    function part(name, info) {
-        return `
-        <div class="part">
-            <strong>${name}</strong><br>
-            <small>${info}</small><br><br>
-            <a href="${amazon}${encodeURIComponent(name)}" target="_blank">Amazon</a> |
-            <a href="${pcdiga}${encodeURIComponent(name)}" target="_blank">PCDiga</a>
-        </div>`;
+    if (!prompt) {
+        resultDiv.innerHTML = `
+            <div class="build-card">
+                <h2>Write your request first 🤖</h2>
+                Example: I have €900 and want a PC for Fortnite.
+            </div>
+        `;
+        return;
     }
 
-    function fps(f1,f2,f3,f4){
-        return `<div class="fps">
-            <strong>Estimated FPS 🎮</strong><br>
-            Fortnite: ${f1}<br>
-            Warzone: ${f2}<br>
-            GTA V: ${f3}<br>
-            Valorant: ${f4}
-        </div>`;
-    }
+    resultDiv.innerHTML = `
+        <div class="build-card">
+            <h2>Thinking... 🤖</h2>
+            Building your custom PC recommendation...
+        </div>
+    `;
 
-    if (!budget) {
-        result = `
-        <div class='build-card'>
-            <h2>BuildForge AI 🤖</h2>
-            <p>Tell me your budget naturally:</p>
-            <p><strong>“I have €800”</strong></p>
-            <p><strong>“Build me a €1500 gaming PC”</strong></p>
-        </div>`;
-    }
+    try {
+        const response = await fetch("http://localhost:3000/ask", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: prompt
+            })
+        });
 
-    else if (budget < 400) {
-        result = `<div class='build-card'><h2>Minimum €400 required</h2></div>`;
-    }
+        const data = await response.json();
 
-    else if (budget < 500) {
-        result = `<div class="build-card"><h2>€400 - €499</h2>
-        ${part("Ryzen 3 4100","Entry CPU")}
-        ${part("GTX 1050 Ti","Basic GPU")}
-        ${part("16GB DDR4","RAM")}
-        ${part("480GB SSD","Storage")}
-        ${part("A320 Motherboard","Entry board")}
-        ${part("500W PSU","Power")}
-        ${part("Case","Budget case")}
-        ${fps(120,60,80,200)}
-        </div>`;
+        resultDiv.innerHTML = `
+            <div class="build-card">
+                <h2>BuildForge AI Recommendation 🤖</h2>
+                ${data.reply}
+            </div>
+        `;
+    } catch (error) {
+        resultDiv.innerHTML = `
+            <div class="build-card">
+                <h2>Error ❌</h2>
+                Make sure your server is running with: node server.js
+            </div>
+        `;
     }
-
-    else if (budget < 600) {
-        result = `<div class="build-card"><h2>€500 - €599</h2>
-        ${part("Ryzen 5 4500","Good CPU")}
-        ${part("GTX 1650","Entry GPU")}
-        ${part("16GB DDR4","RAM")}
-        ${part("500GB NVMe","SSD")}
-        ${part("A520 Motherboard","Board")}
-        ${part("550W PSU","Power")}
-        ${part("Case","Case")}
-        ${fps(140,70,90,220)}
-        </div>`;
-    }
-
-    else if (budget < 700) {
-        result = `<div class="build-card"><h2>€600 - €699</h2>
-        ${part("Ryzen 5 5500","Solid CPU")}
-        ${part("RX 6500 XT","1080p GPU")}
-        ${part("16GB DDR4","RAM")}
-        ${part("1TB NVMe","SSD")}
-        ${part("B450 Motherboard","Board")}
-        ${part("550W PSU","Power")}
-        ${part("Case","Case")}
-        ${fps(160,80,100,240)}
-        </div>`;
-    }
-
-    else if (budget < 800) {
-        result = `<div class="build-card"><h2>€700 - €799</h2>
-        ${part("Ryzen 5 5600","Best value CPU")}
-        ${part("RX 6600","Strong GPU")}
-        ${part("16GB DDR4","RAM")}
-        ${part("1TB NVMe","SSD")}
-        ${part("B550 Motherboard","Board")}
-        ${part("650W PSU","Power")}
-        ${part("Case","Case")}
-        ${fps(180,90,120,300)}
-        </div>`;
-    }
-
-    else if (budget < 900) {
-        result = `<div class="build-card"><h2>€800 - €899</h2>
-        ${part("i5-12400F","Intel CPU")}
-        ${part("RTX 3060","GPU")}
-        ${part("16GB DDR4","RAM")}
-        ${part("1TB NVMe","SSD")}
-        ${part("B660 Motherboard","Board")}
-        ${part("650W PSU","Power")}
-        ${part("Case","Case")}
-        ${fps(200,100,130,320)}
-        </div>`;
-    }
-
-    else if (budget < 1000) {
-        result = `<div class="build-card"><h2>€900 - €999</h2>
-        ${part("Ryzen 5 7600","CPU")}
-        ${part("RTX 4060","GPU")}
-        ${part("32GB DDR5","RAM")}
-        ${part("1TB NVMe","SSD")}
-        ${part("B650 Motherboard","Board")}
-        ${part("750W PSU","Power")}
-        ${part("Case","Case")}
-        ${fps(240,120,160,450)}
-        </div>`;
-    }
-
-    else if (budget < 1200) {
-        result = `<div class="build-card"><h2>€1000 - €1199</h2>
-        ${part("Ryzen 7 7700","CPU")}
-        ${part("RTX 4060 Ti","GPU")}
-        ${part("32GB DDR5","RAM")}
-        ${part("1TB NVMe","SSD")}
-        ${part("B650 Motherboard","Board")}
-        ${part("750W PSU","Power")}
-        ${part("Case","Case")}
-        ${fps(260,130,170,500)}
-        </div>`;
-    }
-
-    else if (budget < 1500) {
-        result = `<div class="build-card"><h2>€1200 - €1499</h2>
-        ${part("Ryzen 7 7800X3D","Best CPU")}
-        ${part("RTX 4070","GPU")}
-        ${part("32GB DDR5","RAM")}
-        ${part("2TB NVMe","SSD")}
-        ${part("X670 Motherboard","Board")}
-        ${part("850W PSU","Power")}
-        ${part("Case","Case")}
-        ${fps(320,160,190,500)}
-        </div>`;
-    }
-
-    else if (budget < 2000) {
-        result = `<div class="build-card"><h2>€1500 - €1999</h2>
-        ${part("i7-14700K","CPU")}
-        ${part("RTX 4070 Ti Super","GPU")}
-        ${part("32GB DDR5","RAM")}
-        ${part("2TB NVMe","SSD")}
-        ${part("Z790 Motherboard","Board")}
-        ${part("850W PSU","Power")}
-        ${part("Case","Case")}
-        ${fps(380,180,220,600)}
-        </div>`;
-    }
-
-    else if (budget < 3000) {
-        result = `<div class="build-card"><h2>€2000 - €2999</h2>
-        ${part("Ryzen 9 7950X3D","CPU")}
-        ${part("RTX 4080 Super","GPU")}
-        ${part("64GB DDR5","RAM")}
-        ${part("4TB NVMe","SSD")}
-        ${part("X670E Motherboard","Board")}
-        ${part("1000W PSU","Power")}
-        ${part("Case","Case")}
-        ${fps(450,220,260,700)}
-        </div>`;
-    }
-
-    else {
-        result = `<div class="build-card"><h2>€3000+</h2>
-        ${part("RTX 4090 Build","Extreme")}
-        ${part("64GB DDR5","RAM")}
-        ${part("8TB NVMe","SSD")}
-        ${part("1200W PSU","Power")}
-        ${part("Case","Case")}
-        ${fps(600,300,350,900)}
-        </div>`;
-    }
-
-    document.getElementById("result").innerHTML = result;
 }
 </script>
 

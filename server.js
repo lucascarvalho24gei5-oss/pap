@@ -44,7 +44,7 @@ PSU
 Case
 
 Then include:
-Estimated FPS in:
+Estimated FPS in Low and high settings:
 - Fortnite (competitive)
 - Warzone
 - GTA V

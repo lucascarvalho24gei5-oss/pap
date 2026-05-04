@@ -41,6 +41,11 @@ CRITICAL RULES:
 - Do not include monitor, keyboard, mouse, Windows, chair, desk, or accessories unless the user asks.
 - Keep the total close to the user's budget.
 - If budget is too low, explain what is realistic.
+- Power supply must match GPU (850W for high-end GPUs)
+- Prefer DDR5 6000 for Ryzen builds
+- Avoid outdated SSDs (no PCIe 3.0 unless budget is very low)
+- Ensure total price is realistic and matches budget
+- If build exceeds budget, downgrade GPU or CPU to fit properly
 
 Budget logic:
 - Under €500: entry-level used/very budget PC.

@@ -1,162 +1,303 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuildForge AI 💻</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BuildForge AI 💻</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
 
-        body {
-            background: radial-gradient(circle at top left, #0a0f2c, #05010f);
-            color: #e5e7eb;
-            text-align: center;
-            min-height: 100vh;
-            padding: 30px;
-        }
+    body {
+      background: radial-gradient(circle at top left, #0a0f2c, #05010f);
+      color: #e5e7eb;
+      text-align: center;
+      min-height: 100vh;
+      padding: 30px;
+    }
 
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #00f5ff, #ff2bd6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #00f5ff, #ff2bd6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        p {
-            margin-bottom: 20px;
-            color: #a5b4fc;
-        }
+    p {
+      margin-bottom: 20px;
+      color: #a5b4fc;
+    }
 
-        .input-container {
-            margin-bottom: 30px;
-        }
+    textarea {
+      padding: 15px;
+      width: 100%;
+      max-width: 750px;
+      height: 120px;
+      border-radius: 16px;
+      font-size: 16px;
+      outline: none;
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border: 1px solid rgba(0,245,255,0.3);
+      resize: none;
+    }
 
-        textarea {
-            padding: 15px;
-            width: 100%;
-            max-width: 650px;
-            height: 120px;
-            border-radius: 16px;
-            font-size: 16px;
-            outline: none;
-            background: rgba(255,255,255,0.08);
-            color: white;
-            border: 1px solid rgba(0,245,255,0.3);
-            resize: none;
-        }
+    button {
+      margin-top: 15px;
+      padding: 12px 25px;
+      background: linear-gradient(90deg, #00f5ff, #ff2bd6);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
 
-        button {
-            margin-top: 15px;
-            padding: 12px 25px;
-            background: linear-gradient(90deg, #00f5ff, #ff2bd6);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
+    button:hover {
+      transform: scale(1.05);
+    }
 
-        button:hover {
-            transform: scale(1.05);
-        }
+    .result-wrapper {
+      max-width: 1000px;
+      margin: 30px auto;
+      text-align: left;
+    }
 
-        .build-card {
-            background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(14px);
-            max-width: 750px;
-            margin: auto;
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0px 0px 25px rgba(0,245,255,0.15);
-            text-align: left;
-            white-space: pre-wrap;
-            line-height: 1.6;
-        }
+    .main-card, .part-card, .fps-card {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(14px);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0px 0px 25px rgba(0,245,255,0.15);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 20px;
+    }
 
-        .build-card h2 {
-            color: #00f5ff;
-            margin-bottom: 20px;
-        }
-    </style>
+    .main-card h2 {
+      color: #00f5ff;
+      margin-bottom: 12px;
+    }
+
+    .parts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .part-type {
+      color: #00f5ff;
+      font-size: 0.85rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .part-name {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: white;
+    }
+
+    .part-price {
+      color: #34d399;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .part-info {
+      color: #c7d2fe;
+      font-size: 0.95rem;
+      margin-bottom: 14px;
+    }
+
+    .links a {
+      color: #ff2bd6;
+      text-decoration: none;
+      font-weight: bold;
+      margin-right: 12px;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .summary-box {
+      background: rgba(0,245,255,0.1);
+      border: 1px solid rgba(0,245,255,0.2);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .summary-box strong {
+      color: #00f5ff;
+    }
+
+    .error {
+      color: #ff7b7b;
+    }
+  </style>
 </head>
+
 <body>
 
 <h1>BuildForge AI 💻</h1>
 <p>Ask for a custom gaming PC build and let AI recommend the parts</p>
 
-<div class="input-container">
-    <textarea id="userPrompt" placeholder="Example: I have €1200 and want a gaming PC"></textarea>
-    <br>
-    <button onclick="askAI()">Ask AI</button>
-</div>
+<textarea id="userPrompt" placeholder="Example: I have €2000 and want a gaming PC for 1440p"></textarea>
+<br>
+<button onclick="askAI()">Ask AI</button>
 
 <div id="result"></div>
 
 <script>
 async function askAI() {
-    const prompt = document.getElementById("userPrompt").value.trim();
-    const resultDiv = document.getElementById("result");
+  const prompt = document.getElementById("userPrompt").value.trim();
+  const resultDiv = document.getElementById("result");
 
-    if (!prompt) {
-        resultDiv.innerHTML = `
-            <div class="build-card">
-                <h2>Write your request first 🤖</h2>
-                Example: I have €900 and want a PC for Fortnite.
-            </div>
-        `;
-        return;
+  if (!prompt) {
+    resultDiv.innerHTML = `
+      <div class="result-wrapper">
+        <div class="main-card">
+          <h2>Write your request first 🤖</h2>
+          <p>Example: I have €900 and want a PC for Fortnite.</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  resultDiv.innerHTML = `
+    <div class="result-wrapper">
+      <div class="main-card">
+        <h2>Thinking... 🤖</h2>
+        <p>Building your custom PC recommendation...</p>
+      </div>
+    </div>
+  `;
+
+  try {
+    const response = await fetch("https://buildforge-api.onrender.com/ask", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: prompt
+      })
+    });
+
+    const data = await response.json();
+    const build = data.reply;
+
+    if (build.error) {
+      resultDiv.innerHTML = `
+        <div class="result-wrapper">
+          <div class="main-card">
+            <h2 class="error">Error ❌</h2>
+            <p>${build.error}</p>
+          </div>
+        </div>
+      `;
+      return;
     }
+
+    const partsHTML = build.parts.map(part => {
+      const search = encodeURIComponent(part.name);
+
+      return `
+        <div class="part-card">
+          <div class="part-type">${part.type}</div>
+          <div class="part-name">${part.name}</div>
+          <div class="part-price">${part.price}</div>
+          <div class="part-info">${part.info}</div>
+
+          <div class="links">
+            <a href="https://www.pcdiga.com/search?query=${search}" target="_blank">PCDiga</a>
+            <a href="https://www.amazon.es/s?k=${search}" target="_blank">Amazon</a>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    const fpsHTML = Object.entries(build.fps).map(([game, fps]) => {
+      return `
+        <div class="summary-box">
+          <strong>${game}</strong><br>
+          ${fps}
+        </div>
+      `;
+    }).join("");
 
     resultDiv.innerHTML = `
-        <div class="build-card">
-            <h2>Thinking... 🤖</h2>
-            Building your custom PC recommendation...
+      <div class="result-wrapper">
+        <div class="main-card">
+          <h2>${build.title}</h2>
+          <p>${build.explanation}</p>
         </div>
+
+        <div class="parts-grid">
+          ${partsHTML}
+        </div>
+
+        <div class="summary-grid">
+          <div class="summary-box">
+            <strong>Total</strong><br>
+            ${build.total}
+          </div>
+
+          <div class="summary-box">
+            <strong>Target</strong><br>
+            ${build.target}
+          </div>
+        </div>
+
+        <div class="fps-card">
+          <h2>Estimated FPS 🎮</h2>
+          <div class="summary-grid">
+            ${fpsHTML}
+          </div>
+        </div>
+
+        <div class="main-card">
+          <p>${build.note}</p>
+        </div>
+      </div>
     `;
 
-    try {
-        const response = await fetch("https://buildforge-api.onrender.com/ask", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                message: prompt
-            })
-        });
-
-        const data = await response.json();
-
-        resultDiv.innerHTML = `
-            <div class="build-card">
-                <h2>BuildForge AI Recommendation 🤖</h2>
-                ${data.reply}
-            </div>
-        `;
-    } catch (error) {
-        resultDiv.innerHTML = `
-            <div class="build-card">
-                <h2>AI is waking up 😴</h2>
-                Free server may take a few seconds. Try again.
-            </div>
-        `;
-    }
+  } catch (error) {
+    resultDiv.innerHTML = `
+      <div class="result-wrapper">
+        <div class="main-card">
+          <h2>AI is waking up 😴</h2>
+          <p>Free server may take a few seconds. Try again.</p>
+        </div>
+      </div>
+    `;
+  }
 }
 
-// 🔥 ENTER = enviar
+// Enter envia, Shift + Enter faz nova linha
 document.getElementById("userPrompt").addEventListener("keydown", function(event) {
-    if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-        askAI();
-    }
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    askAI();
+  }
 });
 </script>
 

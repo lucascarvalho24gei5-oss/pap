@@ -88,7 +88,8 @@
     .info-card:hover,
     .part-card:hover,
     .main-card:hover,
-    .fps-card:hover {
+    .fps-card:hover,
+    .history-panel:hover {
       transform: translateY(-4px);
       box-shadow: 0px 0px 30px rgba(0,245,255,0.22);
     }
@@ -109,9 +110,70 @@
       border: 1px solid rgba(255,43,214,0.35);
     }
 
+    .app-layout {
+      max-width: 1300px;
+      margin: 30px auto;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .history-panel {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(14px);
+      border-radius: 20px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0px 0px 25px rgba(0,245,255,0.12);
+      text-align: left;
+      transition: 0.25s;
+      position: sticky;
+      top: 20px;
+    }
+
+    .history-panel h3 {
+      color: #00f5ff;
+      margin-bottom: 12px;
+    }
+
+    .history-item {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .history-item:hover {
+      background: rgba(0,245,255,0.12);
+      transform: translateX(4px);
+    }
+
+    .history-item strong {
+      color: white;
+      font-size: 0.9rem;
+    }
+
+    .history-item small {
+      color: #a5b4fc;
+      display: block;
+      margin-top: 5px;
+    }
+
+    .clear-history-btn {
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,43,214,0.35);
+      margin-top: 8px;
+      padding: 10px;
+      font-size: 0.85rem;
+    }
+
     .result-wrapper {
       max-width: 1000px;
-      margin: 30px auto;
       text-align: left;
     }
 
@@ -201,7 +263,7 @@
       margin: 20px 0;
     }
 
-    .copy-btn, .new-btn {
+    .copy-btn, .new-btn, .save-btn, .share-btn {
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,43,214,0.35);
       margin: 8px;
@@ -229,6 +291,16 @@
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 900px) {
+      .app-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .history-panel {
+        position: static;
+      }
     }
   </style>
 </head>
@@ -267,14 +339,89 @@
   </div>
 </div>
 
-<div id="result"></div>
+<div class="app-layout">
+  <aside class="history-panel">
+    <h3>Recent Builds</h3>
+    <div id="historyList"></div>
+    <button class="clear-history-btn" onclick="clearHistory()">Delete History 🗑️</button>
+  </aside>
+
+  <main id="result"></main>
+</div>
 
 <script>
 const AMAZON_TAG = "buildforger-21";
+let currentBuild = null;
 
 function setPrompt(text) {
   document.getElementById("userPrompt").value = text;
   document.getElementById("userPrompt").focus();
+}
+
+function getHistory() {
+  return JSON.parse(localStorage.getItem("buildHistory")) || [];
+}
+
+function saveHistory(history) {
+  localStorage.setItem("buildHistory", JSON.stringify(history));
+}
+
+function renderHistory() {
+  const historyList = document.getElementById("historyList");
+  const history = getHistory();
+
+  if (history.length === 0) {
+    historyList.innerHTML = `<p style="font-size:0.9rem;">No saved builds yet.</p>`;
+    return;
+  }
+
+  historyList.innerHTML = history.map((item, index) => `
+    <div class="history-item" onclick="loadBuild(${index})">
+      <strong>${item.build.total || "Saved Build"}</strong>
+      <small>${item.build.target || "Gaming build"}</small>
+    </div>
+  `).join("");
+}
+
+function saveBuild() {
+  if (!currentBuild) return;
+
+  const history = getHistory();
+
+  history.unshift({
+    date: new Date().toLocaleString(),
+    build: currentBuild
+  });
+
+  saveHistory(history.slice(0, 10));
+  renderHistory();
+
+  const saveBtn = document.getElementById("saveBtn");
+  if (saveBtn) {
+    saveBtn.innerText = "Saved ✅";
+    setTimeout(() => saveBtn.innerText = "Save Build ❤️", 1500);
+  }
+}
+
+function loadBuild(index) {
+  const history = getHistory();
+  const item = history[index];
+
+  if (!item) return;
+
+  currentBuild = item.build;
+  document.getElementById("homeContent").style.display = "none";
+  renderBuild(currentBuild);
+
+  window.scrollTo({
+    top: document.getElementById("result").offsetTop,
+    behavior: "smooth"
+  });
+}
+
+function clearHistory() {
+  localStorage.removeItem("buildHistory");
+  renderHistory();
 }
 
 function copyBuild() {
@@ -285,9 +432,31 @@ function copyBuild() {
 
   if (copyBtn) {
     copyBtn.innerText = "Copied ✅";
-    setTimeout(() => {
-      copyBtn.innerText = "Copy Build 📋";
-    }, 1500);
+    setTimeout(() => copyBtn.innerText = "Copy Build 📋", 1500);
+  }
+}
+
+async function shareBuild() {
+  if (!currentBuild) return;
+
+  const shareText = `${currentBuild.title}
+
+Total: ${currentBuild.total}
+Target: ${currentBuild.target}
+
+${currentBuild.parts.map(p => `${p.type}: ${p.name} (${p.price})`).join("\n")}
+
+Built with BuildForge AI`;
+
+  if (navigator.share) {
+    await navigator.share({
+      title: "My BuildForge AI PC Build",
+      text: shareText,
+      url: window.location.href
+    });
+  } else {
+    navigator.clipboard.writeText(shareText);
+    alert("Build copied to clipboard!");
   }
 }
 
@@ -296,11 +465,87 @@ function newBuild() {
   document.getElementById("homeContent").style.display = "block";
   document.getElementById("userPrompt").value = "";
   document.getElementById("userPrompt").focus();
+  currentBuild = null;
 
   window.scrollTo({
     top: 0,
     behavior: "smooth"
   });
+}
+
+function renderBuild(build) {
+  const resultDiv = document.getElementById("result");
+
+  const partsHTML = build.parts.map(part => {
+    const search = encodeURIComponent(part.name);
+    const amazonLink = `https://www.amazon.es/s?k=${search}&tag=${AMAZON_TAG}`;
+    const kuantoLink = `https://www.kuantokusta.pt/search?q=${search}`;
+
+    return `
+      <div class="part-card">
+        <div class="part-type">${part.type}</div>
+        <div class="part-name">${part.name}</div>
+        <div class="part-price">${part.price}</div>
+        <div class="part-info">${part.info}</div>
+
+        <div class="links">
+          <a class="buy-btn" href="${amazonLink}" target="_blank">🛒 Buy on Amazon</a>
+          <a class="best-btn" href="${kuantoLink}" target="_blank">💰 Best Price PT</a>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  const fpsHTML = Object.entries(build.fps).map(([game, fps]) => `
+    <div class="summary-box">
+      <strong>${game}</strong><br>
+      ${fps}
+    </div>
+  `).join("");
+
+  resultDiv.innerHTML = `
+    <div class="result-wrapper">
+      <div class="main-card">
+        <h2>${build.title}</h2>
+        <p>${build.explanation}</p>
+      </div>
+
+      <div class="parts-grid">
+        ${partsHTML}
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-box">
+          <strong>Total</strong><br>
+          ${build.total}
+        </div>
+
+        <div class="summary-box">
+          <strong>Target</strong><br>
+          ${build.target}
+        </div>
+      </div>
+
+      <div class="fps-card">
+        <h2>Estimated FPS 🎮</h2>
+        <div class="summary-grid">
+          ${fpsHTML}
+        </div>
+      </div>
+
+      <div class="main-card">
+        <p>${build.note}</p>
+        <p class="affiliate-note">Disclosure: some Amazon links may be affiliate links.</p>
+      </div>
+
+      <div class="actions">
+        <button id="copyBtn" class="copy-btn" onclick="copyBuild()">Copy Build 📋</button>
+        <button id="saveBtn" class="save-btn" onclick="saveBuild()">Save Build ❤️</button>
+        <button class="share-btn" onclick="shareBuild()">Share Build 🔗</button>
+        <button class="new-btn" onclick="newBuild()">New Build 🔄</button>
+      </div>
+    </div>
+  `;
 }
 
 async function askAI() {
@@ -366,79 +611,9 @@ async function askAI() {
       return;
     }
 
-    const partsHTML = build.parts.map(part => {
-      const search = encodeURIComponent(part.name);
-      const amazonLink = `https://www.amazon.es/s?k=${search}&tag=${AMAZON_TAG}`;
-      const kuantoLink = `https://www.kuantokusta.pt/search?q=${search}`;
+    currentBuild = build;
+    renderBuild(build);
 
-      return `
-        <div class="part-card">
-          <div class="part-type">${part.type}</div>
-          <div class="part-name">${part.name}</div>
-          <div class="part-price">${part.price}</div>
-          <div class="part-info">${part.info}</div>
-
-          <div class="links">
-            <a class="buy-btn" href="${amazonLink}" target="_blank">
-              🛒 Buy on Amazon
-            </a>
-
-            <a class="best-btn" href="${kuantoLink}" target="_blank">
-              💰 Best Price PT
-            </a>
-          </div>
-        </div>
-      `;
-    }).join("");
-
-    const fpsHTML = Object.entries(build.fps).map(([game, fps]) => `
-      <div class="summary-box">
-        <strong>${game}</strong><br>
-        ${fps}
-      </div>
-    `).join("");
-
-    resultDiv.innerHTML = `
-      <div class="result-wrapper">
-        <div class="main-card">
-          <h2>${build.title}</h2>
-          <p>${build.explanation}</p>
-        </div>
-
-        <div class="parts-grid">
-          ${partsHTML}
-        </div>
-
-        <div class="summary-grid">
-          <div class="summary-box">
-            <strong>Total</strong><br>
-            ${build.total}
-          </div>
-
-          <div class="summary-box">
-            <strong>Target</strong><br>
-            ${build.target}
-          </div>
-        </div>
-
-        <div class="fps-card">
-          <h2>Estimated FPS 🎮</h2>
-          <div class="summary-grid">
-            ${fpsHTML}
-          </div>
-        </div>
-
-        <div class="main-card">
-          <p>${build.note}</p>
-          <p class="affiliate-note">Disclosure: some Amazon links may be affiliate links.</p>
-        </div>
-
-        <div class="actions">
-          <button id="copyBtn" class="copy-btn" onclick="copyBuild()">Copy Build 📋</button>
-          <button class="new-btn" onclick="newBuild()">New Build 🔄</button>
-        </div>
-      </div>
-    `;
   } catch (error) {
     askBtn.disabled = false;
     askBtn.innerText = "Ask AI";
@@ -464,6 +639,8 @@ document.getElementById("userPrompt").addEventListener("keydown", function(event
     askAI();
   }
 });
+
+renderHistory();
 </script>
 
 </body>

@@ -50,9 +50,16 @@
       cursor: pointer;
       font-size: 16px;
       font-weight: bold;
+      transition: 0.2s;
     }
 
     button:hover { transform: scale(1.05); }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
 
     .hero-grid {
       max-width: 1000px;
@@ -69,6 +76,15 @@
       padding: 22px;
       text-align: left;
       box-shadow: 0px 0px 25px rgba(0,245,255,0.08);
+      transition: 0.25s;
+    }
+
+    .info-card:hover,
+    .part-card:hover,
+    .main-card:hover,
+    .fps-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0px 0px 30px rgba(0,245,255,0.22);
     }
 
     .info-card h3 {
@@ -101,6 +117,8 @@
       box-shadow: 0px 0px 25px rgba(0,245,255,0.15);
       border: 1px solid rgba(255,255,255,0.08);
       margin-bottom: 20px;
+      transition: 0.25s;
+      animation: fadeUp 0.35s ease;
     }
 
     .main-card h2 { color: #00f5ff; margin-bottom: 12px; }
@@ -131,6 +149,8 @@
       margin-right: 12px;
     }
 
+    .links a:hover { text-decoration: underline; }
+
     .summary-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -143,10 +163,38 @@
       border: 1px solid rgba(0,245,255,0.2);
       border-radius: 16px;
       padding: 16px;
+      animation: fadeUp 0.35s ease;
     }
 
     .summary-box strong { color: #00f5ff; }
     .error { color: #ff7b7b; }
+
+    .actions {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .copy-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,43,214,0.35);
+    }
+
+    .dots::after {
+      content: "";
+      animation: dots 1.4s infinite;
+    }
+
+    @keyframes dots {
+      0% { content: ""; }
+      33% { content: "."; }
+      66% { content: ".."; }
+      100% { content: "..."; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 
@@ -157,7 +205,7 @@
 
 <textarea id="userPrompt" placeholder="Example: I have €2000 and want a gaming PC for 1440p"></textarea>
 <br>
-<button onclick="askAI()">Ask AI</button>
+<button id="askBtn" onclick="askAI()">Ask AI</button>
 
 <div id="homeContent">
   <div class="hero-grid">
@@ -191,10 +239,24 @@ function setPrompt(text) {
   document.getElementById("userPrompt").value = text;
 }
 
+function copyBuild() {
+  const text = document.getElementById("result").innerText;
+  navigator.clipboard.writeText(text);
+  const copyBtn = document.getElementById("copyBtn");
+
+  if (copyBtn) {
+    copyBtn.innerText = "Copied ✅";
+    setTimeout(() => {
+      copyBtn.innerText = "Copy Build 📋";
+    }, 1500);
+  }
+}
+
 async function askAI() {
   const prompt = document.getElementById("userPrompt").value.trim();
   const resultDiv = document.getElementById("result");
   const homeContent = document.getElementById("homeContent");
+  const askBtn = document.getElementById("askBtn");
 
   if (!prompt) {
     resultDiv.innerHTML = `
@@ -208,12 +270,14 @@ async function askAI() {
     return;
   }
 
+  askBtn.disabled = true;
+  askBtn.innerText = "Thinking...";
   homeContent.style.display = "none";
 
   resultDiv.innerHTML = `
     <div class="result-wrapper">
       <div class="main-card">
-        <h2>Thinking... 🤖</h2>
+        <h2>Thinking<span class="dots"></span> 🤖</h2>
         <p>Building your custom PC recommendation...</p>
       </div>
     </div>
@@ -228,6 +292,9 @@ async function askAI() {
 
     const data = await response.json();
     const build = data.reply;
+
+    askBtn.disabled = false;
+    askBtn.innerText = "Ask AI";
 
     if (build.error) {
       resultDiv.innerHTML = `
@@ -297,9 +364,16 @@ async function askAI() {
         <div class="main-card">
           <p>${build.note}</p>
         </div>
+
+        <div class="actions">
+          <button id="copyBtn" class="copy-btn" onclick="copyBuild()">Copy Build 📋</button>
+        </div>
       </div>
     `;
   } catch (error) {
+    askBtn.disabled = false;
+    askBtn.innerText = "Ask AI";
+
     resultDiv.innerHTML = `
       <div class="result-wrapper">
         <div class="main-card">

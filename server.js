@@ -70,6 +70,10 @@ CPU rules:
 - Ryzen 7 7800X3D is preferred for high-end gaming.
 - Avoid Ryzen 9 7950X for pure gaming unless user also mentions productivity, editing, rendering, streaming, or workstation use.
 
+RAM rules:
+- RAM prices have gone up by alot so carefull on the price.
+- Always use Pcdiga for RAM prices.
+
 Output format:
 1. Start with a short sentence:
 "For your budget of €X, this is the best balanced gaming build."

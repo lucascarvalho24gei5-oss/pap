@@ -81,7 +81,7 @@ SSD:
 Motherboard:
 PSU:
 Case:
-Estimated total:
+Realistic total:
 
 3. Add short notes:
 - Why this build makes sense

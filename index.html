@@ -6,12 +6,7 @@
   <title>BuildForge AI 💻</title>
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
 
     body {
       background: radial-gradient(circle at top left, #0a0f2c, #05010f);
@@ -29,10 +24,7 @@
       -webkit-text-fill-color: transparent;
     }
 
-    p {
-      margin-bottom: 20px;
-      color: #a5b4fc;
-    }
+    p { margin-bottom: 20px; color: #a5b4fc; }
 
     textarea {
       padding: 15px;
@@ -60,8 +52,39 @@
       font-weight: bold;
     }
 
-    button:hover {
-      transform: scale(1.05);
+    button:hover { transform: scale(1.05); }
+
+    .hero-grid {
+      max-width: 1000px;
+      margin: 45px auto 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .info-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(0,245,255,0.18);
+      border-radius: 20px;
+      padding: 22px;
+      text-align: left;
+      box-shadow: 0px 0px 25px rgba(0,245,255,0.08);
+    }
+
+    .info-card h3 {
+      color: #00f5ff;
+      margin-bottom: 10px;
+    }
+
+    .example-prompts {
+      margin: 25px auto;
+      max-width: 1000px;
+    }
+
+    .example-prompts button {
+      margin: 8px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,43,214,0.35);
     }
 
     .result-wrapper {
@@ -80,10 +103,7 @@
       margin-bottom: 20px;
     }
 
-    .main-card h2 {
-      color: #00f5ff;
-      margin-bottom: 12px;
-    }
+    .main-card h2 { color: #00f5ff; margin-bottom: 12px; }
 
     .parts-grid {
       display: grid;
@@ -100,34 +120,15 @@
       margin-bottom: 8px;
     }
 
-    .part-name {
-      font-size: 1.1rem;
-      font-weight: bold;
-      margin-bottom: 8px;
-      color: white;
-    }
-
-    .part-price {
-      color: #34d399;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .part-info {
-      color: #c7d2fe;
-      font-size: 0.95rem;
-      margin-bottom: 14px;
-    }
+    .part-name { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; color: white; }
+    .part-price { color: #34d399; font-weight: bold; margin-bottom: 10px; }
+    .part-info { color: #c7d2fe; font-size: 0.95rem; margin-bottom: 14px; }
 
     .links a {
       color: #ff2bd6;
       text-decoration: none;
       font-weight: bold;
       margin-right: 12px;
-    }
-
-    .links a:hover {
-      text-decoration: underline;
     }
 
     .summary-grid {
@@ -144,13 +145,8 @@
       padding: 16px;
     }
 
-    .summary-box strong {
-      color: #00f5ff;
-    }
-
-    .error {
-      color: #ff7b7b;
-    }
+    .summary-box strong { color: #00f5ff; }
+    .error { color: #ff7b7b; }
   </style>
 </head>
 
@@ -163,12 +159,42 @@
 <br>
 <button onclick="askAI()">Ask AI</button>
 
+<div id="homeContent">
+  <div class="hero-grid">
+    <div class="info-card">
+      <h3>⚡ Smart PC Builds</h3>
+      <p>AI picks balanced parts based on your budget, performance target and gaming needs.</p>
+    </div>
+
+    <div class="info-card">
+      <h3>🎮 FPS Estimates</h3>
+      <p>Get estimated performance for Fortnite, Warzone, GTA V and Valorant.</p>
+    </div>
+
+    <div class="info-card">
+      <h3>🇵🇹 Portugal Pricing</h3>
+      <p>Builds use realistic PCDiga-style prices for the Portuguese market.</p>
+    </div>
+  </div>
+
+  <div class="example-prompts">
+    <button onclick="setPrompt('I have €900 and want a gaming PC for Fortnite')">€900 Fortnite PC</button>
+    <button onclick="setPrompt('I have €1500 and want a 1440p gaming PC')">€1500 1440p PC</button>
+    <button onclick="setPrompt('I have €2000 and want the best gaming PC possible')">€2000 High-End PC</button>
+  </div>
+</div>
+
 <div id="result"></div>
 
 <script>
+function setPrompt(text) {
+  document.getElementById("userPrompt").value = text;
+}
+
 async function askAI() {
   const prompt = document.getElementById("userPrompt").value.trim();
   const resultDiv = document.getElementById("result");
+  const homeContent = document.getElementById("homeContent");
 
   if (!prompt) {
     resultDiv.innerHTML = `
@@ -182,6 +208,8 @@ async function askAI() {
     return;
   }
 
+  homeContent.style.display = "none";
+
   resultDiv.innerHTML = `
     <div class="result-wrapper">
       <div class="main-card">
@@ -194,12 +222,8 @@ async function askAI() {
   try {
     const response = await fetch("https://buildforge-api.onrender.com/ask", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: prompt
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: prompt })
     });
 
     const data = await response.json();
@@ -219,14 +243,12 @@ async function askAI() {
 
     const partsHTML = build.parts.map(part => {
       const search = encodeURIComponent(part.name);
-
       return `
         <div class="part-card">
           <div class="part-type">${part.type}</div>
           <div class="part-name">${part.name}</div>
           <div class="part-price">${part.price}</div>
           <div class="part-info">${part.info}</div>
-
           <div class="links">
             <a href="https://www.pcdiga.com/search?query=${search}" target="_blank">PCDiga</a>
             <a href="https://www.amazon.es/s?k=${search}" target="_blank">Amazon</a>
@@ -235,14 +257,12 @@ async function askAI() {
       `;
     }).join("");
 
-    const fpsHTML = Object.entries(build.fps).map(([game, fps]) => {
-      return `
-        <div class="summary-box">
-          <strong>${game}</strong><br>
-          ${fps}
-        </div>
-      `;
-    }).join("");
+    const fpsHTML = Object.entries(build.fps).map(([game, fps]) => `
+      <div class="summary-box">
+        <strong>${game}</strong><br>
+        ${fps}
+      </div>
+    `).join("");
 
     resultDiv.innerHTML = `
       <div class="result-wrapper">
@@ -279,7 +299,6 @@ async function askAI() {
         </div>
       </div>
     `;
-
   } catch (error) {
     resultDiv.innerHTML = `
       <div class="result-wrapper">
@@ -292,7 +311,6 @@ async function askAI() {
   }
 }
 
-// Enter envia, Shift + Enter faz nova linha
 document.getElementById("userPrompt").addEventListener("keydown", function(event) {
   if (event.key === "Enter" && !event.shiftKey) {
     event.preventDefault();

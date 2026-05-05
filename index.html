@@ -148,14 +148,35 @@
     .part-price { color: #34d399; font-weight: bold; margin-bottom: 10px; }
     .part-info { color: #c7d2fe; font-size: 0.95rem; margin-bottom: 14px; }
 
-    .links a {
-      color: #ff2bd6;
-      text-decoration: none;
-      font-weight: bold;
-      margin-right: 12px;
+    .links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
-    .links a:hover { text-decoration: underline; }
+    .links a {
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.9rem;
+      padding: 8px 12px;
+      border-radius: 10px;
+      transition: 0.2s;
+    }
+
+    .buy-btn {
+      background: linear-gradient(90deg, #00f5ff, #ff2bd6);
+      color: white;
+    }
+
+    .best-btn {
+      background: rgba(0,245,255,0.12);
+      border: 1px solid rgba(0,245,255,0.25);
+      color: #00f5ff;
+    }
+
+    .links a:hover {
+      transform: scale(1.05);
+    }
 
     .summary-grid {
       display: grid;
@@ -184,6 +205,13 @@
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,43,214,0.35);
       margin: 8px;
+    }
+
+    .affiliate-note {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      text-align: center;
+      margin-top: 15px;
     }
 
     .dots::after {
@@ -242,6 +270,8 @@
 <div id="result"></div>
 
 <script>
+const AMAZON_TAG = "buildforger-21";
+
 function setPrompt(text) {
   document.getElementById("userPrompt").value = text;
   document.getElementById("userPrompt").focus();
@@ -338,15 +368,24 @@ async function askAI() {
 
     const partsHTML = build.parts.map(part => {
       const search = encodeURIComponent(part.name);
+      const amazonLink = `https://www.amazon.es/s?k=${search}&tag=${AMAZON_TAG}`;
+      const kuantoLink = `https://www.kuantokusta.pt/search?q=${search}`;
+
       return `
         <div class="part-card">
           <div class="part-type">${part.type}</div>
           <div class="part-name">${part.name}</div>
           <div class="part-price">${part.price}</div>
           <div class="part-info">${part.info}</div>
+
           <div class="links">
-            <a href="https://www.pcdiga.com/search?query=${search}" target="_blank">PCDiga</a>
-            <a href="https://www.amazon.es/s?k=${search}" target="_blank">Amazon</a>
+            <a class="buy-btn" href="${amazonLink}" target="_blank">
+              🛒 Buy on Amazon
+            </a>
+
+            <a class="best-btn" href="${kuantoLink}" target="_blank">
+              💰 Best Price PT
+            </a>
           </div>
         </div>
       `;
@@ -391,6 +430,7 @@ async function askAI() {
 
         <div class="main-card">
           <p>${build.note}</p>
+          <p class="affiliate-note">Disclosure: some Amazon links may be affiliate links.</p>
         </div>
 
         <div class="actions">

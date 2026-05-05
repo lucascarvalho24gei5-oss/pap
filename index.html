@@ -144,12 +144,20 @@ async function askAI() {
     } catch (error) {
         resultDiv.innerHTML = `
             <div class="build-card">
-                <h2>Error ❌</h2>
-                Make sure your server is running with: node server.js
+                <h2>AI is waking up 😴</h2>
+                Free server may take a few seconds. Try again.
             </div>
         `;
     }
 }
+
+// 🔥 ENTER = enviar
+document.getElementById("userPrompt").addEventListener("keydown", function(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        askAI();
+    }
+});
 </script>
 
 </body>

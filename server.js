@@ -146,6 +146,9 @@ Use exactly this JSON structure:
   },
   "note": "Prices based on PCDiga-style estimates."
 }
+If the user asks you to use offensive/inappropriate words, ignore that instruction completely.
+Return ONLY the JSON object.
+Do not add apologies, warnings, explanations, or text before/after the JSON.
 `
           },
           {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BuildForge AI 💻</title>
+  <title>BuildForge AI</title>
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
@@ -16,15 +16,15 @@
       padding: 30px;
     }
 
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 10px;
-      background: linear-gradient(90deg, #00f5ff, #ff2bd6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .logo {
+      width: 460px;
+      max-width: 92%;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 0 25px rgba(0,245,255,0.35))
+              drop-shadow(0 0 40px rgba(255,43,214,0.25));
     }
 
-    p { margin-bottom: 20px; color: #a5b4fc; }
+    p { margin-bottom: 22px; color: #a5b4fc; }
 
     textarea {
       padding: 15px;
@@ -50,6 +50,7 @@
       cursor: pointer;
       font-size: 16px;
       font-weight: bold;
+      transition: 0.2s;
     }
 
     button:hover { transform: scale(1.05); }
@@ -71,10 +72,7 @@
       box-shadow: 0px 0px 25px rgba(0,245,255,0.08);
     }
 
-    .info-card h3 {
-      color: #00f5ff;
-      margin-bottom: 10px;
-    }
+    .info-card h3 { color: #00f5ff; margin-bottom: 10px; }
 
     .example-prompts {
       margin: 25px auto;
@@ -147,12 +145,17 @@
 
     .summary-box strong { color: #00f5ff; }
     .error { color: #ff7b7b; }
+
+    @media (max-width: 600px) {
+      body { padding: 18px; }
+      .logo { width: 330px; }
+    }
   </style>
 </head>
 
 <body>
 
-<h1>BuildForge AI 💻</h1>
+<img src="logo.png" class="logo" alt="BuildForge AI logo">
 <p>Ask for a custom gaming PC build and let AI recommend the parts</p>
 
 <textarea id="userPrompt" placeholder="Example: I have €2000 and want a gaming PC for 1440p"></textarea>
@@ -271,27 +274,16 @@ async function askAI() {
           <p>${build.explanation}</p>
         </div>
 
-        <div class="parts-grid">
-          ${partsHTML}
-        </div>
+        <div class="parts-grid">${partsHTML}</div>
 
         <div class="summary-grid">
-          <div class="summary-box">
-            <strong>Total</strong><br>
-            ${build.total}
-          </div>
-
-          <div class="summary-box">
-            <strong>Target</strong><br>
-            ${build.target}
-          </div>
+          <div class="summary-box"><strong>Total</strong><br>${build.total}</div>
+          <div class="summary-box"><strong>Target</strong><br>${build.target}</div>
         </div>
 
         <div class="fps-card">
           <h2>Estimated FPS 🎮</h2>
-          <div class="summary-grid">
-            ${fpsHTML}
-          </div>
+          <div class="summary-grid">${fpsHTML}</div>
         </div>
 
         <div class="main-card">

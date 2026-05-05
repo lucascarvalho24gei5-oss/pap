@@ -169,15 +169,23 @@ Use exactly this JSON structure:
 
     let aiText = data.choices[0].message.content;
 
-    aiText = aiText
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .trim();
+aiText = aiText
+  .replace(/```json/g, "")
+  .replace(/```/g, "")
+  .trim();
 
-    let parsedReply;
+// Extract only the JSON part, even if AI adds text before it
+const jsonStart = aiText.indexOf("{");
+const jsonEnd = aiText.lastIndexOf("}");
 
-    try {
-      parsedReply = JSON.parse(aiText);
+if (jsonStart !== -1 && jsonEnd !== -1) {
+  aiText = aiText.substring(jsonStart, jsonEnd + 1);
+}
+
+let parsedReply;
+
+try {
+  parsedReply = JSON.parse(aiText);
     } catch (err) {
       parsedReply = {
         title: "BuildForge AI Recommendation",

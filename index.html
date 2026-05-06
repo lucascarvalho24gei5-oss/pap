@@ -236,9 +236,7 @@
       color: #00f5ff;
     }
 
-    .links a:hover {
-      transform: scale(1.05);
-    }
+    .links a:hover { transform: scale(1.05); }
 
     .summary-grid {
       display: grid;
@@ -257,6 +255,28 @@
 
     .summary-box strong { color: #00f5ff; }
     .error { color: #ff7b7b; }
+
+    .fps-bar-bg {
+      width: 100%;
+      height: 12px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+
+    .fps-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #00f5ff, #ff2bd6);
+      box-shadow: 0 0 15px rgba(0,245,255,0.5);
+      animation: growBar 1s ease;
+    }
+
+    .fps-text {
+      color: #c7d2fe;
+      font-size: 0.9rem;
+    }
 
     .actions {
       text-align: center;
@@ -293,14 +313,13 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 900px) {
-      .app-layout {
-        grid-template-columns: 1fr;
-      }
+    @keyframes growBar {
+      from { width: 0; }
+    }
 
-      .history-panel {
-        position: static;
-      }
+    @media (max-width: 900px) {
+      .app-layout { grid-template-columns: 1fr; }
+      .history-panel { position: static; }
     }
   </style>
 </head>
@@ -329,6 +348,15 @@
     <div class="info-card">
       <h3>🇵🇹 Portugal Pricing</h3>
       <p>Builds use realistic PCDiga-style prices for the Portuguese market.</p>
+    </div>
+  </div>
+
+  <div class="main-card" style="max-width:1000px;margin:25px auto;text-align:left;">
+    <h2>🔥 Trending Builds</h2>
+    <div class="example-prompts">
+      <button onclick="setPrompt('Best gaming PC under €800')">Best €800 Build</button>
+      <button onclick="setPrompt('Best RTX 5070 gaming PC')">RTX 5070 Beast</button>
+      <button onclick="setPrompt('Best GTA 6 gaming PC')">GTA 6 Ready</button>
     </div>
   </div>
 
@@ -477,8 +505,27 @@ function newBuild() {
   });
 }
 
+function getBuildScore(build) {
+  const total = parseInt(String(build.total).replace(/\D/g, "")) || 0;
+
+  if (total >= 2000) {
+    return { score: "9.4/10", upgrade: "Excellent", bottleneck: "Low" };
+  }
+
+  if (total >= 1200) {
+    return { score: "8.7/10", upgrade: "Good", bottleneck: "Low-Medium" };
+  }
+
+  if (total >= 800) {
+    return { score: "8.0/10", upgrade: "Medium", bottleneck: "Medium" };
+  }
+
+  return { score: "7.2/10", upgrade: "Limited", bottleneck: "Medium-High" };
+}
+
 function renderBuild(build) {
   const resultDiv = document.getElementById("result");
+  const buildScore = getBuildScore(build);
 
   const partsHTML = build.parts.map(part => {
     const search = encodeURIComponent(part.name);
@@ -500,12 +547,20 @@ function renderBuild(build) {
     `;
   }).join("");
 
-  const fpsHTML = Object.entries(build.fps).map(([game, fps]) => `
-    <div class="summary-box">
-      <strong>${game}</strong><br>
-      ${fps}
-    </div>
-  `).join("");
+  const fpsHTML = Object.entries(build.fps).map(([game, fps]) => {
+    const numericFPS = parseInt(fps) || 0;
+    const width = Math.min(numericFPS / 5, 100);
+
+    return `
+      <div class="summary-box">
+        <strong>${game}</strong>
+        <div class="fps-bar-bg">
+          <div class="fps-bar-fill" style="width:${width}%"></div>
+        </div>
+        <span class="fps-text">${fps}</span>
+      </div>
+    `;
+  }).join("");
 
   resultDiv.innerHTML = `
     <div class="result-wrapper">
@@ -527,6 +582,21 @@ function renderBuild(build) {
         <div class="summary-box">
           <strong>Target</strong><br>
           ${build.target}
+        </div>
+
+        <div class="summary-box">
+          <strong>Build Score</strong><br>
+          ${build.score || buildScore.score}
+        </div>
+
+        <div class="summary-box">
+          <strong>Upgrade Potential</strong><br>
+          ${build.upgrade || buildScore.upgrade}
+        </div>
+
+        <div class="summary-box">
+          <strong>Bottleneck Risk</strong><br>
+          ${build.bottleneck || buildScore.bottleneck}
         </div>
       </div>
 

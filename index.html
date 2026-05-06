@@ -444,15 +444,19 @@ async function shareBuild() {
 Total: ${currentBuild.total}
 Target: ${currentBuild.target}
 
-${currentBuild.parts.map(p => `${p.type}: ${p.name} (${p.price})`).join("\n")}
+Parts:
+${currentBuild.parts.map(p => `${p.type}: ${p.name} - ${p.price}`).join("\n")}
 
-Built with BuildForge AI`;
+FPS:
+${Object.entries(currentBuild.fps).map(([game, fps]) => `${game}: ${fps}`).join("\n")}
+
+Built with BuildForge AI:
+${window.location.href}`;
 
   if (navigator.share) {
     await navigator.share({
       title: "My BuildForge AI PC Build",
-      text: shareText,
-      url: window.location.href
+      text: shareText
     });
   } else {
     navigator.clipboard.writeText(shareText);

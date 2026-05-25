@@ -20,14 +20,15 @@
     .top-header {
       max-width: 1200px;
       margin: 0 auto 20px;
-      display: flex;
+      display: grid;
+      grid-template-columns: 60px 1fr 60px;
       align-items: center;
-      justify-content: space-between;
     }
 
     .logo-area {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 16px;
     }
 
@@ -96,7 +97,8 @@
       -webkit-text-fill-color: transparent;
     }
 
-    .menu-btn, .profile-btn {
+    .menu-btn,
+    .profile-btn {
       width: 52px;
       height: 52px;
       border-radius: 16px;
@@ -107,11 +109,32 @@
       cursor: pointer;
       backdrop-filter: blur(10px);
       transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0;
     }
 
-    .menu-btn:hover, .profile-btn:hover {
+    .menu-btn { justify-self: start; }
+    .profile-btn { justify-self: end; }
+
+    .menu-btn:hover,
+    .profile-btn:hover {
       transform: scale(1.06);
       box-shadow: 0 0 20px rgba(0,245,255,0.3);
+    }
+
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(3px);
+      z-index: 9998;
+      display: none;
+    }
+
+    .menu-overlay.open {
+      display: block;
     }
 
     .side-menu {
@@ -120,11 +143,11 @@
       left: -310px;
       width: 300px;
       height: 100vh;
-      background: rgba(10,15,44,0.96);
+      background: rgba(10,15,44,0.98);
       backdrop-filter: blur(18px);
       border-right: 1px solid rgba(0,245,255,0.2);
       box-shadow: 0 0 35px rgba(0,245,255,0.15);
-      z-index: 999;
+      z-index: 9999;
       padding: 25px;
       text-align: left;
       transition: 0.3s;
@@ -453,15 +476,39 @@
     }
 
     @media (max-width: 900px) {
-      .app-layout { grid-template-columns: 1fr; }
-      .history-panel { position: static; }
+      body { padding: 18px; }
+
+      .top-header {
+        grid-template-columns: 48px 1fr 48px;
+      }
+
       .logo-area h1 { font-size: 2rem; }
-      .logo-symbol { width: 55px; height: 55px; }
+
+      .logo-symbol {
+        width: 55px;
+        height: 55px;
+      }
+
+      .menu-btn,
+      .profile-btn {
+        width: 45px;
+        height: 45px;
+      }
+
+      .app-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .history-panel {
+        position: static;
+      }
     }
   </style>
 </head>
 
 <body>
+
+<div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 
 <div class="side-menu" id="sideMenu">
   <span class="close-menu" onclick="toggleMenu()">✕</span>
@@ -545,6 +592,7 @@ let currentBuild = null;
 
 function toggleMenu() {
   document.getElementById("sideMenu").classList.toggle("open");
+  document.getElementById("menuOverlay").classList.toggle("open");
 }
 
 function setPrompt(text) {

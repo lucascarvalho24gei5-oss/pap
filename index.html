@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BuildForge AI 💻</title>
+  <title>BuildForge AI</title>
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
@@ -14,14 +14,149 @@
       text-align: center;
       min-height: 100vh;
       padding: 30px;
+      overflow-x: hidden;
     }
 
-    h1 {
+    .top-header {
+      max-width: 1200px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-symbol {
+      position: relative;
+      width: 70px;
+      height: 70px;
+    }
+
+    .pc-front,
+    .pc-back {
+      position: absolute;
+      width: 38px;
+      height: 52px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #00f5ff, #8b5cf6, #ff2bd6);
+      border: 2px solid rgba(255,255,255,0.18);
+      box-shadow:
+        0 0 18px rgba(0,245,255,0.55),
+        0 0 35px rgba(255,43,214,0.3);
+    }
+
+    .pc-back {
+      left: 22px;
+      top: 5px;
+      opacity: 0.45;
+      transform: rotate(8deg);
+    }
+
+    .pc-front {
+      left: 7px;
+      top: 14px;
+      z-index: 2;
+    }
+
+    .pc-front::before,
+    .pc-back::before {
+      content: "";
+      position: absolute;
+      top: 9px;
+      left: 9px;
+      width: 17px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.75);
+    }
+
+    .pc-front::after,
+    .pc-back::after {
+      content: "";
+      position: absolute;
+      bottom: 9px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 0 12px white;
+    }
+
+    .logo-area h1 {
       font-size: 3rem;
-      margin-bottom: 10px;
-      background: linear-gradient(90deg, #00f5ff, #ff2bd6);
+      background: linear-gradient(90deg, #00f5ff, #8b5cf6, #ff2bd6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+
+    .menu-btn, .profile-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.06);
+      color: white;
+      font-size: 1.35rem;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: 0.2s;
+    }
+
+    .menu-btn:hover, .profile-btn:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 20px rgba(0,245,255,0.3);
+    }
+
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -310px;
+      width: 300px;
+      height: 100vh;
+      background: rgba(10,15,44,0.96);
+      backdrop-filter: blur(18px);
+      border-right: 1px solid rgba(0,245,255,0.2);
+      box-shadow: 0 0 35px rgba(0,245,255,0.15);
+      z-index: 999;
+      padding: 25px;
+      text-align: left;
+      transition: 0.3s;
+    }
+
+    .side-menu.open { left: 0; }
+
+    .side-menu h2 {
+      color: #00f5ff;
+      margin-bottom: 25px;
+    }
+
+    .side-menu a {
+      display: block;
+      color: #c7d2fe;
+      text-decoration: none;
+      padding: 13px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .side-menu a:hover {
+      background: rgba(0,245,255,0.12);
+      color: white;
+    }
+
+    .close-menu {
+      float: right;
+      cursor: pointer;
+      color: #ff2bd6;
+      font-size: 1.4rem;
     }
 
     p { margin-bottom: 20px; color: #a5b4fc; }
@@ -320,13 +455,39 @@
     @media (max-width: 900px) {
       .app-layout { grid-template-columns: 1fr; }
       .history-panel { position: static; }
+      .logo-area h1 { font-size: 2rem; }
+      .logo-symbol { width: 55px; height: 55px; }
     }
   </style>
 </head>
 
 <body>
 
-<h1>BuildForge AI 💻</h1>
+<div class="side-menu" id="sideMenu">
+  <span class="close-menu" onclick="toggleMenu()">✕</span>
+  <h2>BuildForge</h2>
+  <a href="#" onclick="newBuild(); toggleMenu()">🏠 Home</a>
+  <a href="#historyList" onclick="toggleMenu()">💾 Saved Builds</a>
+  <a href="#" onclick="setPrompt('Compare a €1000 gaming PC with a €1500 gaming PC'); toggleMenu()">⚔️ Compare Builds</a>
+  <a href="#" onclick="setPrompt('Best gaming PC under €800'); toggleMenu()">🔥 Top Builds</a>
+  <a href="#" onclick="setPrompt('I already have an RTX 4060 and 16GB RAM. Complete the rest of the PC with a €800 budget.'); toggleMenu()">🧩 Already Have Parts</a>
+  <a href="#" onclick="alert('Login coming soon 🔥')">👤 Login</a>
+</div>
+
+<div class="top-header">
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <div class="logo-area">
+    <div class="logo-symbol">
+      <div class="pc-back"></div>
+      <div class="pc-front"></div>
+    </div>
+    <h1>BuildForge AI</h1>
+  </div>
+
+  <button class="profile-btn" onclick="alert('Profile coming soon 🔥')">👤</button>
+</div>
+
 <p>Ask for a custom gaming PC build and let AI recommend the parts</p>
 
 <textarea id="userPrompt" placeholder="Example: I have €2000 and want a gaming PC for 1440p"></textarea>
@@ -361,10 +522,10 @@
   </div>
 
   <div class="example-prompts">
-  <button onclick="setPrompt('I have €900 and want a gaming PC for Fortnite')">€900 Fortnite PC</button>
-  <button onclick="setPrompt('I have €1500 and want a 1440p gaming PC')">€1500 1440p PC</button>
-  <button onclick="setPrompt('I have €2000 and want the best gaming PC possible')">€2000 High-End PC</button>
-  <button onclick="setPrompt('I already have an RTX 4060 and 16GB RAM. Complete the rest of the PC with a €800 budget.')">Already have parts</button>
+    <button onclick="setPrompt('I have €900 and want a gaming PC for Fortnite')">€900 Fortnite PC</button>
+    <button onclick="setPrompt('I have €1500 and want a 1440p gaming PC')">€1500 1440p PC</button>
+    <button onclick="setPrompt('I have €2000 and want the best gaming PC possible')">€2000 High-End PC</button>
+    <button onclick="setPrompt('I already have an RTX 4060 and 16GB RAM. Complete the rest of the PC with a €800 budget.')">Already have parts</button>
   </div>
 </div>
 
@@ -381,6 +542,10 @@
 <script>
 const AMAZON_TAG = "buildforger-21";
 let currentBuild = null;
+
+function toggleMenu() {
+  document.getElementById("sideMenu").classList.toggle("open");
+}
 
 function setPrompt(text) {
   document.getElementById("userPrompt").value = text;
@@ -509,17 +674,9 @@ function newBuild() {
 function getBuildScore(build) {
   const total = parseInt(String(build.total).replace(/\D/g, "")) || 0;
 
-  if (total >= 2000) {
-    return { score: "9.4/10", upgrade: "Excellent", bottleneck: "Low" };
-  }
-
-  if (total >= 1200) {
-    return { score: "8.7/10", upgrade: "Good", bottleneck: "Low-Medium" };
-  }
-
-  if (total >= 800) {
-    return { score: "8.0/10", upgrade: "Medium", bottleneck: "Medium" };
-  }
+  if (total >= 2000) return { score: "9.4/10", upgrade: "Excellent", bottleneck: "Low" };
+  if (total >= 1200) return { score: "8.7/10", upgrade: "Good", bottleneck: "Low-Medium" };
+  if (total >= 800) return { score: "8.0/10", upgrade: "Medium", bottleneck: "Medium" };
 
   return { score: "7.2/10", upgrade: "Limited", bottleneck: "Medium-High" };
 }
@@ -575,30 +732,11 @@ function renderBuild(build) {
       </div>
 
       <div class="summary-grid">
-        <div class="summary-box">
-          <strong>Total</strong><br>
-          ${build.total}
-        </div>
-
-        <div class="summary-box">
-          <strong>Target</strong><br>
-          ${build.target}
-        </div>
-
-        <div class="summary-box">
-          <strong>Build Score</strong><br>
-          ${build.score || buildScore.score}
-        </div>
-
-        <div class="summary-box">
-          <strong>Upgrade Potential</strong><br>
-          ${build.upgrade || buildScore.upgrade}
-        </div>
-
-        <div class="summary-box">
-          <strong>Bottleneck Risk</strong><br>
-          ${build.bottleneck || buildScore.bottleneck}
-        </div>
+        <div class="summary-box"><strong>Total</strong><br>${build.total}</div>
+        <div class="summary-box"><strong>Target</strong><br>${build.target}</div>
+        <div class="summary-box"><strong>Build Score</strong><br>${build.score || buildScore.score}</div>
+        <div class="summary-box"><strong>Upgrade Potential</strong><br>${build.upgrade || buildScore.upgrade}</div>
+        <div class="summary-box"><strong>Bottleneck Risk</strong><br>${build.bottleneck || buildScore.bottleneck}</div>
       </div>
 
       <div class="fps-card">

@@ -571,7 +571,7 @@
   <aside class="history-panel">
     <h3>Recent Builds</h3>
     <div id="historyList"></div>
-    <button class="clear-history-btn" onclick="clearHistory()">Delete History 🗑️</button>
+    <button class="clear-history-btn" onclick="clearHistory()">Delete History </button>
   </aside>
 
   <main id="result"></main>
@@ -631,8 +631,8 @@ function saveBuild() {
 
   const saveBtn = document.getElementById("saveBtn");
   if (saveBtn) {
-    saveBtn.innerText = "Saved ✅";
-    setTimeout(() => saveBtn.innerText = "Save Build ❤️", 1500);
+    saveBtn.innerText = "Saved ";
+    setTimeout(() => saveBtn.innerText = "Save Build ", 1500);
   }
 }
 
@@ -664,8 +664,8 @@ function copyBuild() {
   const copyBtn = document.getElementById("copyBtn");
 
   if (copyBtn) {
-    copyBtn.innerText = "Copied ✅";
-    setTimeout(() => copyBtn.innerText = "Copy Build 📋", 1500);
+    copyBtn.innerText = "Copied ";
+    setTimeout(() => copyBtn.innerText = "Copy Build ", 1500);
   }
 }
 
@@ -737,8 +737,8 @@ function renderBuild(build) {
         <div class="part-info">${part.info}</div>
 
         <div class="links">
-          <a class="buy-btn" href="${amazonLink}" target="_blank">🛒 Buy on Amazon</a>
-          <a class="best-btn" href="${kuantoLink}" target="_blank">💰 Best Price PT</a>
+          <a class="buy-btn" href="${amazonLink}" target="_blank"> Buy on Amazon</a>
+          <a class="best-btn" href="${kuantoLink}" target="_blank"> Best Price PT</a>
         </div>
       </div>
     `;
@@ -779,7 +779,7 @@ function renderBuild(build) {
       </div>
 
       <div class="fps-card">
-        <h2>Estimated FPS 🎮</h2>
+        <h2>Estimated FPS </h2>
         <div class="summary-grid">
           ${fpsHTML}
         </div>
@@ -791,10 +791,10 @@ function renderBuild(build) {
       </div>
 
       <div class="actions">
-        <button id="copyBtn" class="copy-btn" onclick="copyBuild()">Copy Build 📋</button>
-        <button id="saveBtn" class="save-btn" onclick="saveBuild()">Save Build ❤️</button>
-        <button class="share-btn" onclick="shareBuild()">Share Build 🔗</button>
-        <button class="new-btn" onclick="newBuild()">New Build 🔄</button>
+        <button id="copyBtn" class="copy-btn" onclick="copyBuild()">Copy Build </button>
+        <button id="saveBtn" class="save-btn" onclick="saveBuild()">Save Build </button>
+        <button class="share-btn" onclick="shareBuild()">Share Build </button>
+        <button class="new-btn" onclick="newBuild()">New Build </button>
       </div>
     </div>
   `;
@@ -810,7 +810,7 @@ async function askAI() {
     resultDiv.innerHTML = `
       <div class="result-wrapper">
         <div class="main-card">
-          <h2>Write your request first 🤖</h2>
+          <h2>Write your request first </h2>
           <p>Example: I have €900 and want a PC for Fortnite.</p>
         </div>
       </div>
@@ -825,7 +825,7 @@ async function askAI() {
   resultDiv.innerHTML = `
     <div class="result-wrapper">
       <div class="main-card">
-        <h2>Thinking<span class="dots"></span> 🤖</h2>
+        <h2>Thinking<span class="dots"></span> </h2>
         <p>Building your custom PC recommendation...</p>
       </div>
     </div>
@@ -878,7 +878,7 @@ async function askAI() {
         </div>
 
         <div class="actions">
-          <button class="new-btn" onclick="newBuild()">New Build 🔄</button>
+          <button class="new-btn" onclick="newBuild()">New Build </button>
         </div>
       </div>
     `;

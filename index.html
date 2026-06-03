@@ -475,6 +475,30 @@
       from { width: 0; }
     }
 
+    .action-row{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-top:18px;
+      }
+
+    .voice-btn{
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(0,245,255,0.25);
+      color:white;
+      }
+
+    .voice-btn:hover{
+      transform:scale(1.05);
+      }
+
+    .voice-btn.listening{
+      background:linear-gradient(90deg,#00f5ff,#ff2bd6);
+      box-shadow:0 0 25px rgba(0,245,255,0.4);
+      }
+
     @media (max-width: 900px) {
       body { padding: 18px; }
 
@@ -539,8 +563,20 @@
 
 <textarea id="userPrompt" placeholder="Example: I have €2000 and want a gaming PC for 1440p"></textarea>
 <br>
-<button id="askBtn" onclick="askAI()">Ask AI</button>
+<div class="action-row">
 
+  <button id="askBtn" onclick="askAI()">
+    Ask AI
+  </button>
+
+  <button
+    id="micBtn"
+    class="voice-btn"
+    onclick="startVoiceInput()">
+    Voice Input
+  </button>
+</div>
+  
 <div id="homeContent">
   <div class="hero-grid">
     <div class="info-card">
@@ -891,7 +927,108 @@ document.getElementById("userPrompt").addEventListener("keydown", function(event
     askAI();
   }
 });
+function startVoiceInput(){
 
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if(!SpeechRecognition){
+    alert("Voice input only works on Chrome or Edge.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+
+  recognition.lang = "en-US";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  const micBtn =
+    document.getElementById("micBtn");
+
+  micBtn.innerText = "Listening...";
+  micBtn.classList.add("listening");
+
+  recognition.start();
+
+  recognition.onresult = function(event){
+
+    const spokenText =
+      event.results[0][0].transcript;
+
+    document.getElementById("userPrompt").value =
+      spokenText;
+
+    micBtn.innerText = "Voice Input";
+    micBtn.classList.remove("listening");
+  };
+
+  recognition.onerror = function(){
+
+    micBtn.innerText = "Voice Input";
+    micBtn.classList.remove("listening");
+
+    alert("Microphone error.");
+  };
+
+  recognition.onend = function(){
+
+    micBtn.innerText = "Voice Input";
+    micBtn.classList.remove("listening");
+  };
+}
+  function startVoiceInput(){
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if(!SpeechRecognition){
+    alert("Voice input only works on Chrome or Edge.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+
+  recognition.lang = "en-US";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  const micBtn =
+    document.getElementById("micBtn");
+
+  micBtn.innerText = "Listening...";
+  micBtn.classList.add("listening");
+
+  recognition.start();
+
+  recognition.onresult = function(event){
+
+    const spokenText =
+      event.results[0][0].transcript;
+
+    document.getElementById("userPrompt").value =
+      spokenText;
+
+    micBtn.innerText = "Voice Input";
+    micBtn.classList.remove("listening");
+  };
+
+  recognition.onerror = function(){
+
+    micBtn.innerText = "Voice Input";
+    micBtn.classList.remove("listening");
+
+    alert("Microphone error.");
+  };
+
+  recognition.onend = function(){
+
+    micBtn.innerText = "Voice Input";
+    micBtn.classList.remove("listening");
+  };
+}
 renderHistory();
 </script>
 
